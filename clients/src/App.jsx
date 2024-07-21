@@ -2,7 +2,6 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HomePage from "./components/home/HomePage";
 import AboutUs from "./components/about/AboutUs";
-import Auth from "./components/authentication/Auth";
 import Dashboard from "./components/dashboard/Dashboard";
 import Account from "./components/account/Account";
 import Contact from "./components/contact/Contact";
@@ -17,7 +16,6 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/about" element={<AboutUs />} />
-            <Route path="/auth" element={<Auth />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/account" element={<Account />} />
             <Route path="/contact" element={<Contact />} />

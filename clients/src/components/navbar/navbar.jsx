@@ -1,15 +1,39 @@
 import React, { useState, useContext } from "react";
 import { FaBars } from "react-icons/fa";
 import { AiOutlineShoppingCart } from "react-icons/ai";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../contex/Authcontext";
+import Modal from "react-modal";
+import Auth from "../authentication/Auth";
 
 function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
   const { isAuthenticated } = useContext(AuthContext);
+  const navigate = useNavigate();
 
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const openAuthModal = () => {
+    setIsAuthModalOpen(true);
+  };
+
+  const closeAuthModal = () => {
+    setIsAuthModalOpen(false);
+  };
+
+  const handleDashboardClick = () => {
+    if (!isAuthenticated) {
+      setShowAlert(true);
+      setTimeout(() => {
+        setShowAlert(false);
+      }, 3000);
+    } else {
+      navigate("/dashboard");
+    }
   };
 
   return (
@@ -24,16 +48,19 @@ function Navbar() {
             <Link to={"/about"}>
               <p className="hover:text-gray-300">About Us</p>
             </Link>
-            <Link to={"/dashboard"}>
-              <p className="hover:text-gray-300">Dashboard</p>
-            </Link>
+            <p
+              onClick={handleDashboardClick}
+              className="hover:text-gray-300 cursor-pointer"
+            >
+              Dashboard
+            </p>
             <Link to={"/contact"}>
               <p className="hover:text-gray-300">Contact</p>
             </Link>
           </nav>
           <button
             className="md:hidden text-white focus:outline-none"
-            onClick={toggleMenu}
+            onClick={toggleMobileMenu}
           >
             <FaBars size={24} />
           </button>
@@ -52,29 +79,49 @@ function Navbar() {
               </button>
             </Link>
           ) : (
-            <Link to={"/auth"}>
-              <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-md text-white ml-6 md:ml-6">
-                LOGIN
-              </button>
-            </Link>
+            <button
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-md text-white ml-6 md:ml-6"
+              onClick={openAuthModal}
+            >
+              LOGIN
+            </button>
           )}
         </div>
-        {isOpen && (
+        {isMobileMenuOpen && (
           <div className="md:hidden">
             <nav className="flex flex-col p-4 bg-gray-700">
-              <Link to={"/"} onClick={toggleMenu}>
+              <Link to={"/"} onClick={toggleMobileMenu}>
                 <p className="hover:text-gray-300 py-2">Home</p>
               </Link>
-              <Link to={"/about"} onClick={toggleMenu}>
+              <Link to={"/about"} onClick={toggleMobileMenu}>
                 <p className="hover:text-gray-300 py-2">About Us</p>
               </Link>
-              <Link to={"/dashboard"} onClick={toggleMenu}>
-                <p className="hover:text-gray-300 py-2">Dashboard</p>
-              </Link>
-              <Link to={"/contact"} onClick={toggleMenu}>
+              <p
+                onClick={handleDashboardClick}
+                className="hover:text-gray-300 py-2 cursor-pointer"
+              >
+                Dashboard
+              </p>
+              <Link to={"/contact"} onClick={toggleMobileMenu}>
                 <p className="hover:text-gray-300 py-2">Contact</p>
               </Link>
             </nav>
+          </div>
+        )}
+        {isAuthModalOpen && (
+          <Modal
+            isOpen={isAuthModalOpen}
+            onRequestClose={closeAuthModal}
+            contentLabel="Authentication Modal"
+            className="min-h-screen flex items-center justify-center bg-transparent"
+            overlayClassName="fixed inset-0 bg-gray-500 bg-opacity-75"
+          >
+            <Auth setIsOpen={closeAuthModal} />
+          </Modal>
+        )}
+        {showAlert && (
+          <div className="fixed top-4 right-4 bg-red-600 text-white p-2 rounded-md shadow-md">
+            <p>Please sign up</p>
           </div>
         )}
       </div>

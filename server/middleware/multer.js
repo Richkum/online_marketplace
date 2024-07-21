@@ -6,7 +6,7 @@ const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
     folder: "marketplace",
-    format: async (req, file) => "png", // supports promises as well
+    format: async (req, file) => "png",
     public_id: (req, file) => "computed-filename-using-request",
   },
 });

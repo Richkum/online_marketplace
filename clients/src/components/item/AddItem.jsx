@@ -27,7 +27,11 @@ function AddItemModal({ isOpen, onClose }) {
   }, []);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
   };
 
   const handleImageChange = (e) => {
@@ -47,19 +51,37 @@ function AddItemModal({ isOpen, onClose }) {
     data.append("name", formData.name);
     data.append("category", formData.category);
 
+    console.log("Submitting form data:", {
+      price: formData.price,
+      description: formData.description,
+      name: formData.name,
+      category: formData.category,
+      images: formData.images,
+    });
+
     try {
       const response = await axios.post("/api/product/add-product", data, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
-        timeout: 50000,
+        timeout: 60000,
       });
       console.log("Product added successfully:", response.data);
       onClose();
     } catch (err) {
-      console.error("Error adding product:", err);
+      if (err.response) {
+        console.error("Error adding product:", err.response.data.message);
+      } else if (err.request) {
+        console.error(
+          "Error adding product: No response received",
+          err.request
+        );
+      } else {
+        console.error("Error adding product:", err.message);
+      }
     }
   };
+
   if (!isOpen) return null;
 
   return (
@@ -123,7 +145,6 @@ function AddItemModal({ isOpen, onClose }) {
               Price
             </label>
             <input
-              type="number"
               id="price"
               name="price"
               value={formData.price}
@@ -176,6 +197,7 @@ function AddItemModal({ isOpen, onClose }) {
               onChange={handleChange}
               className="border border-gray-400 p-2 w-full"
             >
+              <option value="">Select Category</option>
               {categories.map((category) => (
                 <option key={category.id} value={category.id}>
                   {category.name}

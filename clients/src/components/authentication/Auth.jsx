@@ -4,7 +4,7 @@ import { AuthContext } from "../../contex/Authcontext";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
-function Auth() {
+function Auth({ setIsOpen }) {
   const [isLogin, setIsLogin] = useState(true);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -26,6 +26,7 @@ function Auth() {
       if (response.data) {
         login(response.data);
         navigate("/");
+        setIsOpen(false);
       }
     } catch (err) {
       console.error("Submission error:", err);
@@ -46,9 +47,8 @@ function Auth() {
       }
     }
   };
-
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+    <div className="min-h-screen flex items-center justify-center">
       <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
         <h2 className="text-2xl font-bold mb-6">
           {isLogin ? "Log In" : "Sign Up"}
