@@ -1,5 +1,6 @@
 import React from "react";
 import Navbar from "../navbar/navbar";
+import Footer from "../footer/Footer";
 
 function AboutUs() {
   return (
@@ -21,6 +22,8 @@ function AboutUs() {
           </div>
         </div>
       </div>
+
+      <Footer />
     </>
   );
 }

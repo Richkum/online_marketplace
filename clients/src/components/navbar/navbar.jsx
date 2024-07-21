@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { FaBars } from "react-icons/fa";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../../contex/Authcontext";
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const { isAuthenticated } = useContext(AuthContext);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -22,8 +24,8 @@ function Navbar() {
             <Link to={"/about"}>
               <p className="hover:text-gray-300">About Us</p>
             </Link>
-            <Link to={"/products"}>
-              <p className="hover:text-gray-300">Products</p>
+            <Link to={"/dashboard"}>
+              <p className="hover:text-gray-300">Dashboard</p>
             </Link>
             <Link to={"/contact"}>
               <p className="hover:text-gray-300">Contact</p>
@@ -43,12 +45,19 @@ function Navbar() {
               <AiOutlineShoppingCart size={20} className="hidden md:block" />
             </button>
           </Link>
-          <Link to={"/account"}>
-            <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-md text-white ml-6 md:ml-6">
-              {" "}
-              My Account
-            </button>
-          </Link>
+          {isAuthenticated ? (
+            <Link to={"/account"}>
+              <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-md text-white ml-6 md:ml-6">
+                My Account
+              </button>
+            </Link>
+          ) : (
+            <Link to={"/auth"}>
+              <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-md text-white ml-6 md:ml-6">
+                LOGIN
+              </button>
+            </Link>
+          )}
         </div>
         {isOpen && (
           <div className="md:hidden">
@@ -59,8 +68,8 @@ function Navbar() {
               <Link to={"/about"} onClick={toggleMenu}>
                 <p className="hover:text-gray-300 py-2">About Us</p>
               </Link>
-              <Link to={"/products"} onClick={toggleMenu}>
-                <p className="hover:text-gray-300 py-2">Products</p>
+              <Link to={"/dashboard"} onClick={toggleMenu}>
+                <p className="hover:text-gray-300 py-2">Dashboard</p>
               </Link>
               <Link to={"/contact"} onClick={toggleMenu}>
                 <p className="hover:text-gray-300 py-2">Contact</p>
