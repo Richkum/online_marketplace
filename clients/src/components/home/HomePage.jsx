@@ -1,9 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../navbar/navbar";
 import { Link } from "react-router-dom";
 import Footer from "../footer/Footer";
+import { fetchProducts } from "../../apiCalls/fetchData";
 
 function ProductsPage() {
+  const [productss, setProducts] = useState([]);
+
+  useEffect(() => {
+    const getProducts = async () => {
+      try {
+        const productss = await fetchProducts();
+        setProducts(productss);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+
+    getProducts();
+  }, []);
+
   const categories = [
     { id: 1, name: "phone" },
     { id: 2, name: "bags" },
@@ -146,7 +162,7 @@ function ProductsPage() {
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = products.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = productss.slice(indexOfFirstItem, indexOfLastItem);
 
   const handleClick = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -216,7 +232,7 @@ function ProductsPage() {
                   className="bg-gray-100 p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out"
                 >
                   <img
-                    src={product.imageUrl}
+                    src={product.image_urls[0]}
                     alt={product.name}
                     className="w-full h-48 object-cover rounded-t-lg"
                   />

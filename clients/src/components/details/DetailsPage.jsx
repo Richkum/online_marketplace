@@ -3,129 +3,6 @@ import { useParams } from "react-router-dom";
 import Navbar from "../navbar/navbar";
 import Footer from "../footer/Footer";
 
-const products = [
-  {
-    id: 1,
-    name: "iphone 15",
-    price: "$1999.00",
-    category: "phone",
-    imageUrl: [
-      "https://images.unsplash.com/photo-1695048132832-b41495f12eb4?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    ],
-  },
-  {
-    id: 2,
-    name: "Gucci bag",
-    price: "$2000.00",
-    category: "bags",
-    imageUrl: [
-      "https://images.unsplash.com/photo-1682745230951-8a5aa9a474a0?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    ],
-  },
-  {
-    id: 3,
-    name: "prada shoes",
-    price: "$115.00",
-    category: "shoes",
-    imageUrl: [
-      "https://plus.unsplash.com/premium_photo-1669644856868-6613f6683346?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    ],
-  },
-  {
-    id: 4,
-    name: "jersy",
-    price: "$40.00",
-    category: "clothes",
-    imageUrl: [
-      "https://images.unsplash.com/photo-1718337799040-9c5e1051b67b?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    ],
-  },
-  {
-    id: 5,
-    name: "nike boots",
-    price: "$200.00",
-    category: "shoes",
-    imageUrl: [
-      "https://images.unsplash.com/photo-1612387049695-637b743f80ad?q=80&w=1894&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    ],
-  },
-  {
-    id: 6,
-    name: "wigs",
-    price: "$60.00",
-    category: "wigs",
-    imageUrl: [
-      "https://images.unsplash.com/photo-1519421692594-d7a3f3e3fe5f?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    ],
-  },
-  {
-    id: 7,
-    name: "mercedes",
-    price: "$50000.00",
-    category: "cars",
-    imageUrl: [
-      "https://images.unsplash.com/photo-1608994751987-e647252b1fd9?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    ],
-  },
-  {
-    id: 8,
-    name: "honda",
-    price: "$10000.00",
-    category: "bikes",
-    imageUrl: [
-      "https://images.unsplash.com/photo-1610553556003-9b2ae8ef1b8e?q=80&w=2127&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    ],
-  },
-  {
-    id: 9,
-    name: "beds",
-    price: "$90.00",
-    category: "furniture",
-    imageUrl: [
-      "https://plus.unsplash.com/premium_photo-1670076515907-2736a3492f23?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    ],
-  },
-  {
-    id: 10,
-    name: "bedsheets",
-    price: "$10.00",
-    category: "clothes",
-    imageUrl: [
-      "https://images.unsplash.com/photo-1486591038957-19e7c73bdc41?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    ],
-  },
-  {
-    id: 11,
-    name: "shirts",
-    price: "$10.00",
-    category: "clothes",
-    imageUrl: [
-      "https://images.unsplash.com/photo-1626497764746-6dc36546b388?q=80&w=1926&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    ],
-  },
-  {
-    id: 12,
-    name: "couch",
-    price: "$110.00",
-    category: "furniture",
-    imageUrl: [
-      "https://images.unsplash.com/photo-1596900779744-2bdc4a90509a?q=80&w=1876&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    ],
-  },
-  {
-    id: 13,
-    name: "bycicles",
-    price: "$75.00",
-    category: "bikes",
-    imageUrl: [
-      "https://images.unsplash.com/photo-1484920274317-87885fcbc504?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "https://images.unsplash.com/photo-1616257240427-07e5165722ca?q=80&w=2040&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "https://images.unsplash.com/photo-1563460937-8e3fd7f161f6?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-      "https://images.unsplash.com/photo-1623574226937-0dad1c9a0495?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    ],
-  },
-];
-
 function DetailsPage() {
   const { id } = useParams();
   const product = products.find((p) => p.id === parseInt(id));
@@ -188,7 +65,8 @@ function DetailsPage() {
             <p className="mt-4 text-xl text-gray-600">{product.price}</p>
             <p className="mt-6 text-gray-700">
               This is a placeholder for the product description. Add details
-              about the product here.
+              about the product here.Discover amazing products from our online
+              store.
             </p>
             <button className="mt-6 px-6 py-2 bg-blue-500 text-white font-bold rounded-lg hover:bg-blue-600">
               Add to Cart

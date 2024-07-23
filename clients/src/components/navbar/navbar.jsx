@@ -25,17 +25,6 @@ function Navbar() {
     setIsAuthModalOpen(false);
   };
 
-  const handleDashboardClick = () => {
-    if (!isAuthenticated) {
-      setShowAlert(true);
-      setTimeout(() => {
-        setShowAlert(false);
-      }, 3000);
-    } else {
-      navigate("/dashboard");
-    }
-  };
-
   return (
     <div className="bg-gray-800 text-white p-4 shadow-md">
       <div className="container mx-auto flex flex-wrap items-center justify-between">
@@ -48,12 +37,6 @@ function Navbar() {
             <Link to={"/about"}>
               <p className="hover:text-gray-300">About Us</p>
             </Link>
-            <p
-              onClick={handleDashboardClick}
-              className="hover:text-gray-300 cursor-pointer"
-            >
-              Dashboard
-            </p>
             <Link to={"/contact"}>
               <p className="hover:text-gray-300">Contact</p>
             </Link>
@@ -96,12 +79,6 @@ function Navbar() {
               <Link to={"/about"} onClick={toggleMobileMenu}>
                 <p className="hover:text-gray-300 py-2">About Us</p>
               </Link>
-              <p
-                onClick={handleDashboardClick}
-                className="hover:text-gray-300 py-2 cursor-pointer"
-              >
-                Dashboard
-              </p>
               <Link to={"/contact"} onClick={toggleMobileMenu}>
                 <p className="hover:text-gray-300 py-2">Contact</p>
               </Link>

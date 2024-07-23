@@ -3,6 +3,7 @@ import axios from "axios";
 import { fetchCategories } from "../../apiCalls/fetchData";
 
 function AddItemModal({ isOpen, onClose }) {
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     images: [],
     price: "",
@@ -44,6 +45,7 @@ function AddItemModal({ isOpen, onClose }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     const data = new FormData();
     formData.images.forEach((image) => data.append("images", image));
     data.append("price", formData.price);
@@ -52,6 +54,8 @@ function AddItemModal({ isOpen, onClose }) {
     data.append("category", formData.category);
 
     try {
+      await new Promise((resolve) => setTimeout(resolve, 30000));
+
       const response = await axios.post("/api/product/add-product", data, {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -72,6 +76,8 @@ function AddItemModal({ isOpen, onClose }) {
       } else {
         console.error("Error adding product:", err);
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -79,10 +85,11 @@ function AddItemModal({ isOpen, onClose }) {
 
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center px-4 py-8">
-      <div className="bg-white rounded-lg shadow-lg p-8">
+      <div className="bg-white rounded-lg shadow-lg p-8 overflow-auto max-h-full">
         <button
           onClick={onClose}
           className="float-right text-white bg-red-500 hover:bg-red-700 px-2 py-1 rounded-lg"
+          style={{ maxHeight: "80vh" }}
         >
           X
         </button>
@@ -216,10 +223,18 @@ function AddItemModal({ isOpen, onClose }) {
             <button
               type="submit"
               className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+              disabled={isLoading}
             >
-              Add Item
+              {isLoading ? "Adding item..." : "Add Item"}
             </button>
           </div>
+          {isLoading && (
+            <div className="text-center mt-4">
+              <p className="text-gray-700">
+                Adding item. This might take a while.
+              </p>
+            </div>
+          )}
         </form>
       </div>
     </div>

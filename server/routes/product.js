@@ -9,9 +9,6 @@ router.post("/add-product", async (req, res) => {
   const client = await pool.connect();
 
   try {
-    console.log(req.body);
-    console.log(req.files);
-
     const { name, description, price, category } = req.body;
     const images = req.files.images;
 

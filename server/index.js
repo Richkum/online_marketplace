@@ -31,7 +31,7 @@ app.get("/", (req, res) => {
 
 app.use("/auth", authRoutes);
 
-app.use("/product", productRoutes);
+app.use("/product", authMiddleware, productRoutes);
 
 app.use("/category", authMiddleware, categoryRoutes);
 
