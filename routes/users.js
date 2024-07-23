@@ -1,89 +1,54 @@
-import express from 'express';
-import pool from '../database_config/db.js';
-
+import express from "express";
 const router = express.Router();
+import connection from "../database_config/db.js";
 
-/* GET home page. */
-// router.get('/', function(req, res, next) {
-//   res.render('index', { title: 'Express' });
-// })
 
-// Handle favicon.ico request
-router.get('/favicon.ico', (req, res) => {
-  res.status(204).end(); // Send a 204 No Content response
-});
-// Fetch all users
-router.get('/', (req, res, next) => {
-  const query = 'SELECT * FROM users';
-  pool.query(query, (error, result) => {
-    if (error) {
-      return next(error); // Use 'return' to exit the handler
+router.get("/", function (req, res, next) {
+  const getquery = ` SELECT
+  p.idPro,
+  p.namePro,
+  p.imagePro,
+  p.price,
+  c.nameCat
+FROM products AS p
+INNER JOIN categories AS c ON p.idPro = c.idPro; `;
+  connection.query(getquery, (err, data) => {
+    if (err) {
+      // Handle the error
+      console.error(err);
+      return res.status(500).json({ error: 'Internal server error' });
     }
-    return res.status(200).json(result.rows);
+
+    if (data.length === 0) {
+      // Handle the case where no data is found
+      return res.status(404).json({ error: 'Product not found' });
+    }
+
+    // Send the data
+    res.setHeader("Content-type", "application/json");
+    res.send(data);
   });
 });
 
-// Create a new user
-router.post('/', (req, res, next) => {
-  const { username } = req.body;
-  const query = 'INSERT INTO users (username) VALUES ($1) RETURNING *';
-  pool.query(query, [username], (error, result) => {
-    if (error) {
-      return next(error); // Use 'return' to exit the handler
+router.get("/categories", function (req, res, next) {
+  const getquery = ` SELECT nameCat
+  FROM categories;`;
+  connection.query(getquery, (err, data) => {
+    if (err) {
+      // Handle the error
+      console.error(err);
+      return res.status(500).json({ error: 'Internal server error' });
     }
-    return res.status(201).json(result.rows[0]);
+
+    if (data.length === 0) {
+      // Handle the case where no data is found
+      return res.status(404).json({ error: 'No categories found' });
+    }
+
+    // Send the data
+    res.setHeader("Content-type", "application/json");
+    res.send(data);
   });
 });
-
-// Fetch a user by ID
-router.get('/:id', (req, res, next) => {
-  const { id } = req.params;
-  const query = 'SELECT * FROM users WHERE user_id = $1';
-  pool.query(query, [id], (error, result) => {
-    if (error) {
-      return next(error); // Use 'return' to exit the handler
-    }
-    const user = result.rows[0];
-    if (!user) {
-      return res.status(404).json({ error: 'user not found' });
-    }
-    return res.json(user);
-  });
-});
-
-// Update a user
-router.put('/:id', (req, res, next) => {
-  const { id } = req.params;
-  const { name } = req.body;
-  const query = 'UPDATE users SET name = $1 WHERE user_id = $2 RETURNING *';
-  pool.query(query, [name, id], (error, result) => {
-    if (error) {
-      return next(error); // Use 'return' to exit the handler
-    }
-    const user = result.rows[0];
-    if (!user) {
-      return res.status(404).json({ error: 'user not found' });
-    }
-    return res.json(user);
-  });
-});
-
-// Delete a user
-router.delete('/:id', (req, res, next) => {
-  const { id } = req.params;
-  const query = 'DELETE FROM users WHERE user_id = $1 RETURNING *';
-  pool.query(query, [id], (error, result) => {
-    if (error) {
-      return next(error); // Use 'return' to exit the handler
-    }
-    const user = result.rows[0];
-    if (!user) {
-      return res.status(404).json({ error: 'user not found' });
-    }
-    return res.json({ message: 'user deleted successfully' });
-  });
-});
-
 
 export default router;
-
