@@ -145,11 +145,12 @@ function AddItemModal({ isOpen, onClose }) {
               className="block text-gray-700 font-bold mb-2"
               htmlFor="price"
             >
-              Price
+              Price($)
             </label>
             <input
               id="price"
               name="price"
+              type="number"
               value={formData.price}
               onChange={handleChange}
               className="border border-gray-200 p-2 w-full outline-none"

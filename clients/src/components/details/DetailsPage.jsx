@@ -1,9 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Navbar from "../navbar/navbar";
 import Footer from "../footer/Footer";
+import { fetchProducts } from "../../apiCalls/fetchData";
 
 function DetailsPage() {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    fetchProducts().then((data) => setProducts(data));
+  }, []);
+
   const { id } = useParams();
   const product = products.find((p) => p.id === parseInt(id));
 
@@ -22,18 +29,18 @@ function DetailsPage() {
 
   const handlePrevImage = () => {
     setCurrentImageIndex((prevIndex) =>
-      prevIndex === 0 ? product.imageUrl.length - 1 : prevIndex - 1
+      prevIndex === 0 ? product.image_urls.length - 1 : prevIndex - 1
     );
   };
 
   const handleNextImage = () => {
     setCurrentImageIndex((prevIndex) =>
-      prevIndex === product.imageUrl.length - 1 ? 0 : prevIndex + 1
+      prevIndex === product.image_urls.length - 1 ? 0 : prevIndex + 1
     );
   };
 
   const similarProducts = products.filter(
-    (p) => p.id !== product.id && p.category === product.category
+    (p) => p.id !== product.id && p.category_id === product.category_id
   );
 
   return (
@@ -43,7 +50,7 @@ function DetailsPage() {
         <div className="flex flex-col lg:flex-row items-start lg:items-center space-y-6 lg:space-y-0 lg:space-x-6">
           <div className="relative w-full lg:w-1/2">
             <img
-              src={product.imageUrl[currentImageIndex]}
+              src={product.image_urls[currentImageIndex]}
               alt={product.name}
               className="w-full h-96 object-cover rounded-lg shadow-md"
             />
@@ -62,19 +69,17 @@ function DetailsPage() {
           </div>
           <div className="flex-1">
             <h1 className="text-3xl font-bold text-gray-800">{product.name}</h1>
-            <p className="mt-4 text-xl text-gray-600">{product.price}</p>
-            <p className="mt-6 text-gray-700">
-              This is a placeholder for the product description. Add details
-              about the product here.Discover amazing products from our online
-              store.
+            <p className="mt-4 text-xl text-gray-600 font-semibold">
+              $ {product.price}
             </p>
+            <p className="mt-6 text-gray-700">{product.description}</p>
             <button className="mt-6 px-6 py-2 bg-blue-500 text-white font-bold rounded-lg hover:bg-blue-600">
               Add to Cart
             </button>
           </div>
         </div>
         <div className="mt-4 flex space-x-2">
-          {product.imageUrl.map((image, index) => (
+          {product.image_urls.map((image, index) => (
             <img
               key={index}
               src={image}
@@ -87,7 +92,7 @@ function DetailsPage() {
           ))}
         </div>
         <div className="mt-12">
-          <h2 className="text-2xl font-bold text-gray-800">Similar Products</h2>
+          <h1 className="text-2xl font-bold text-gray-800">Similar Products</h1>
           <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mt-6">
             {similarProducts.map((similarProduct) => (
               <div
@@ -95,7 +100,7 @@ function DetailsPage() {
                 className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out"
               >
                 <img
-                  src={similarProduct.imageUrl[0]}
+                  src={similarProduct.image_urls[0]}
                   alt={similarProduct.name}
                   className="w-full h-48 object-cover rounded-t-lg"
                 />
@@ -103,7 +108,9 @@ function DetailsPage() {
                   <h2 className="text-lg font-semibold text-gray-800">
                     {similarProduct.name}
                   </h2>
-                  <p className="mt-2 text-gray-600">{similarProduct.price}</p>
+                  <p className="mt-2 text-gray-600 font-semibold">
+                    $ {similarProduct.price}
+                  </p>
                 </div>
               </div>
             ))}

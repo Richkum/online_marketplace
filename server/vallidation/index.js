@@ -11,13 +11,12 @@ const loginSchema = Joi.object({
   password: Joi.string().min(8).required(),
 });
 
-const validatePrice = (price) => {
-  const schema = Joi.string().pattern(/^\d+(\.\d{1,2})?$/);
-  return schema.validate(price);
-};
+const priceschema = Joi.object({
+  price: Joi.number().required(),
+});
 
 const addItem = () => {
   const schema = Joi.string();
 };
 
-export { signupSchema, loginSchema, validatePrice };
+export { signupSchema, loginSchema, priceschema };

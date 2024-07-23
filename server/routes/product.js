@@ -1,6 +1,6 @@
 import express from "express";
 import pool from "../db.config/index.js";
-import { validatePrice } from "../vallidation/index.js";
+import { priceschema } from "../vallidation/index.js";
 import uploadImageToCloudinary from "../middleware/multer.js";
 
 const router = express.Router();
@@ -12,7 +12,7 @@ router.post("/add-product", async (req, res) => {
     const { name, description, price, category } = req.body;
     const images = req.files.images;
 
-    if (!validatePrice(price)) {
+    if (!priceschema.validate(price)) {
       return res.status(400).json({ message: "Invalid price format" });
     }
 
