@@ -51,20 +51,13 @@ function AddItemModal({ isOpen, onClose }) {
     data.append("name", formData.name);
     data.append("category", formData.category);
 
-    console.log("Submitting form data:", {
-      price: formData.price,
-      description: formData.description,
-      name: formData.name,
-      category: formData.category,
-      images: formData.images,
-    });
-
     try {
       const response = await axios.post("/api/product/add-product", data, {
         headers: {
           "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
-        timeout: 60000,
+        timeout: 30000,
       });
       console.log("Product added successfully:", response.data);
       onClose();
@@ -77,7 +70,7 @@ function AddItemModal({ isOpen, onClose }) {
           err.request
         );
       } else {
-        console.error("Error adding product:", err.message);
+        console.error("Error adding product:", err);
       }
     }
   };

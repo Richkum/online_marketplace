@@ -16,4 +16,8 @@ const validatePrice = (price) => {
   return schema.validate(price);
 };
 
+const addItem = () => {
+  const schema = Joi.string();
+};
+
 export { signupSchema, loginSchema, validatePrice };
