@@ -33,8 +33,6 @@ router.post("/signup", async (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
-  console.log("Incoming request body:", req.body);
-
   const { error } = loginSchema.validate(req.body);
   if (error) {
     console.error("Validation error:", error.details[0].message);

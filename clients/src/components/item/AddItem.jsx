@@ -87,8 +87,11 @@ function AddItemModal({ isOpen, onClose }) {
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center px-4 py-8">
       <div className="bg-white rounded-lg shadow-lg p-8">
-        <button onClick={onClose} className="float-right text-gray-500">
-          Close
+        <button
+          onClick={onClose}
+          className="float-right text-white bg-red-500 hover:bg-red-700 px-2 py-1 rounded-lg"
+        >
+          X
         </button>
         <h2 className="text-2xl font-bold mb-4">Add Item</h2>
         <form onSubmit={handleSubmit}>
@@ -105,7 +108,7 @@ function AddItemModal({ isOpen, onClose }) {
               name="images"
               multiple
               onChange={handleImageChange}
-              className="border border-gray-400 p-2"
+              className="border border-gray-200 p-2"
             />
             {formData.images.length > 0 && (
               <div className="mt-2">
@@ -149,7 +152,7 @@ function AddItemModal({ isOpen, onClose }) {
               name="price"
               value={formData.price}
               onChange={handleChange}
-              className="border border-gray-400 p-2 w-full"
+              className="border border-gray-200 p-2 w-full outline-none"
             />
           </div>
           <div className="mb-4">
@@ -164,7 +167,7 @@ function AddItemModal({ isOpen, onClose }) {
               name="description"
               value={formData.description}
               onChange={handleChange}
-              className="border border-gray-400 p-2 w-full"
+              className="border border-gray-200 p-2 w-full outline-none"
             ></textarea>
           </div>
           <div className="mb-4">
@@ -180,7 +183,7 @@ function AddItemModal({ isOpen, onClose }) {
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className="border border-gray-400 p-2 w-full"
+              className="border border-gray-200 p-2 w-full outline-none"
             />
           </div>
           <div className="mb-4">
@@ -195,11 +198,15 @@ function AddItemModal({ isOpen, onClose }) {
               name="category"
               value={formData.category}
               onChange={handleChange}
-              className="border border-gray-400 p-2 w-full"
+              className=" p-2 w-full bg-white outline-none"
             >
               <option value="">Select Category</option>
               {categories.map((category) => (
-                <option key={category.id} value={category.id}>
+                <option
+                  key={category.id}
+                  value={category.id}
+                  className="bg-white border p-2"
+                >
                   {category.name}
                 </option>
               ))}
