@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import Navbar from "../navbar/navbar";
 import Footer from "../footer/Footer";
 import { fetchProducts } from "../../apiCalls/fetchData";
+import { Link } from "react-router-dom";
 
 function DetailsPage() {
   const [products, setProducts] = useState([]);
@@ -94,26 +95,29 @@ function DetailsPage() {
         <div className="mt-12">
           <h1 className="text-2xl font-bold text-gray-800">Similar Products</h1>
           <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mt-6">
-            {similarProducts.map((similarProduct) => (
-              <div
-                key={similarProduct.id}
-                className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out"
-              >
-                <img
-                  src={similarProduct.image_urls[0]}
-                  alt={similarProduct.name}
-                  className="w-full h-48 object-cover rounded-t-lg"
-                />
-                <div className="mt-4">
-                  <h2 className="text-lg font-semibold text-gray-800">
-                    {similarProduct.name}
-                  </h2>
-                  <p className="mt-2 text-gray-600 font-semibold">
-                    $ {similarProduct.price}
-                  </p>
+            <Link to={`/products/${products.id}`}>
+              {" "}
+              {similarProducts.map((similarProduct) => (
+                <div
+                  key={similarProduct.id}
+                  className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out"
+                >
+                  <img
+                    src={similarProduct.image_urls[0]}
+                    alt={similarProduct.name}
+                    className="w-full h-48 object-cover rounded-t-lg"
+                  />
+                  <div className="mt-4">
+                    <h2 className="text-lg font-semibold text-gray-800">
+                      {similarProduct.name}
+                    </h2>
+                    <p className="mt-2 text-gray-600 font-semibold">
+                      $ {similarProduct.price}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </Link>
           </div>
         </div>
       </div>

@@ -8,6 +8,7 @@ import Contact from "./components/contact/Contact";
 import DetailsPage from "./components/details/DetailsPage";
 import Carts from "./components/carts/Carts";
 import { AuthProvider } from "./contex/Authcontext";
+import Listing from "./components/listings/Listing";
 function App() {
   return (
     <>
@@ -21,6 +22,7 @@ function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/products/:id" element={<DetailsPage />} />
             <Route path="/carts" element={<Carts />} />
+            <Route path="/listings" element={<Listing />} />
           </Routes>
         </Router>
       </AuthProvider>

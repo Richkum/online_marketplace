@@ -27,7 +27,7 @@ router.post("/add-product", async (req, res) => {
       "INSERT INTO products(name, price, category_id, description, image_urls) VALUES($1, $2, $3, $4, $5) RETURNING id";
     const result = await client.query(insertProductQuery, [
       name,
-      parseFloat(price),
+      Number(price),
       category,
       description,
       imageUrls,
