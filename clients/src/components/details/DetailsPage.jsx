@@ -4,9 +4,13 @@ import Navbar from "../navbar/navbar";
 import Footer from "../footer/Footer";
 import { fetchProducts } from "../../apiCalls/fetchData";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 function DetailsPage() {
   const [products, setProducts] = useState([]);
+  const [reviews, setReviews] = useState([]);
+  const [newReview, setNewReview] = useState([]);
+  const [rating, setRating] = useState(0);
 
   useEffect(() => {
     fetchProducts().then((data) => setProducts(data));
@@ -14,6 +18,44 @@ function DetailsPage() {
 
   const { id } = useParams();
   const product = products.find((p) => p.id === parseInt(id));
+
+  useEffect(() => {
+    if (product) {
+      fetchReviews(product.id);
+    }
+  }, [product]);
+
+  const fetchReviews = async (productId) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3000/reviews/review/${productId}`
+      );
+      setReviews(response.data);
+    } catch (error) {
+      console.error("Error fetching reviews:", error);
+    }
+  };
+
+  const handleReviewSubmit = async () => {
+    try {
+      await axios.post(`http://localhost:3000/reviews/add-review`, {
+        product_id: id,
+        review: newReview,
+        rating,
+      });
+      setNewReview("");
+      setRating(0);
+      fetchReviews(id);
+    } catch (error) {
+      console.error("Error submitting review:", error);
+    }
+  };
+
+  const getAverageRating = () => {
+    if (reviews.length === 0) return 0;
+    const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
+    return totalRating / reviews.length;
+  };
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
@@ -74,6 +116,20 @@ function DetailsPage() {
               $ {product.price}
             </p>
             <p className="mt-6 text-gray-700">{product.description}</p>
+            <div className="mt-6 text-gray-700 flex items-center">
+              {Array.from({ length: 5 }, (_, index) => (
+                <p
+                  key={index}
+                  className={`${
+                    index < getAverageRating()
+                      ? "text-yellow-400"
+                      : "text-gray-100"
+                  } text-4xl`}
+                >
+                  ★
+                </p>
+              ))}
+            </div>
             <button className="mt-6 px-6 py-2 bg-blue-500 text-white font-bold rounded-lg hover:bg-blue-600">
               Add to Cart
             </button>
@@ -91,6 +147,63 @@ function DetailsPage() {
               onClick={() => setCurrentImageIndex(index)}
             />
           ))}
+        </div>
+        <div className="mt-12">
+          <h2 className="text-2xl font-bold">Customer Reviews</h2>
+          <div className="mt-4">
+            {reviews.map((review) => (
+              <div key={review.id} className="mb-4">
+                <div className="flex items-center">
+                  {Array.from({ length: 5 }, (_, index) => (
+                    <span
+                      key={index}
+                      className={`${
+                        index < review.rating
+                          ? "text-yellow-400"
+                          : "text-gray-100"
+                      } text-3xl`}
+                    >
+                      ★
+                    </span>
+                  ))}
+                </div>
+                <p className="text-gray-500 font-sans">{review.comment}</p>
+                <p className="text-black text-sm font-bold">
+                  - {review.username}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-6">
+            <h3 className="text-xl font-bold">Leave a Review</h3>
+            <textarea
+              value={newReview}
+              onChange={(e) => setNewReview(e.target.value)}
+              className="w-full mt-2 p-2 border rounded-md"
+              placeholder="Write your review here..."
+            />
+            <div className="mt-2">
+              <span className="text-green-900 font-bold">Rating: </span>
+              {Array.from({ length: 5 }, (_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setRating(index + 1)}
+                  className={`${
+                    index < rating ? "text-yellow-400" : "text-gray-200"
+                  } text-3xl p-2 rounded-full hover:bg-gray-100`}
+                >
+                  ★
+                </button>
+              ))}
+            </div>
+            <button
+              onClick={handleReviewSubmit}
+              className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+            >
+              Submit Review
+            </button>
+          </div>
         </div>
         <div className="mt-12">
           <h1 className="text-2xl font-bold text-gray-800">Similar Products</h1>

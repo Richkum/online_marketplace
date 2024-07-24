@@ -19,4 +19,10 @@ const addItem = () => {
   const schema = Joi.string();
 };
 
-export { signupSchema, loginSchema, priceschema };
+const reviewSchema = Joi.object({
+  product_id: Joi.number().required(),
+  review: Joi.string().required(),
+  rating: Joi.number().min(1).max(5).required(),
+});
+
+export { signupSchema, loginSchema, priceschema, reviewSchema };

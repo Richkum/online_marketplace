@@ -2,10 +2,11 @@ import express from "express";
 import pool from "../db.config/index.js";
 import { priceschema } from "../vallidation/index.js";
 import uploadImageToCloudinary from "../middleware/multer.js";
+import authMiddleware from "../middleware/authIndex.js";
 
 const router = express.Router();
 
-router.post("/add-product", async (req, res) => {
+router.post("/add-product", authMiddleware, async (req, res) => {
   const client = await pool.connect();
 
   try {

@@ -5,7 +5,7 @@ import cors from "cors";
 import authRoutes from "./routes/auth.js";
 import productRoutes from "./routes/product.js";
 import categoryRoutes from "./routes/category.js";
-import authMiddleware from "./middleware/authIndex.js";
+import reviesRoutes from "./routes/reviews.js";
 import fileUpload from "express-fileupload";
 
 dotenv.config();
@@ -31,9 +31,11 @@ app.get("/", (req, res) => {
 
 app.use("/auth", authRoutes);
 
-app.use("/product", authMiddleware, productRoutes);
+app.use("/product", productRoutes);
 
-app.use("/category", authMiddleware, categoryRoutes);
+app.use("/category", categoryRoutes);
+
+app.use("/reviews", reviesRoutes);
 
 app.listen(port, () => {
   console.log(`app listening at http://localhost:${port}`);

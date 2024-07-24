@@ -5,7 +5,6 @@ const fetchCategories = async () => {
     const response = await axios.get(
       "http://localhost:3000/category/all-category"
     );
-    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error("Error fetching categories:", error.message);
@@ -15,7 +14,7 @@ const fetchCategories = async () => {
 
 const fetchProducts = async () => {
   try {
-    const token = localStorage.getItem("token"); // Assuming the token is stored in localStorage
+    const token = localStorage.getItem("token");
     const response = await axios.get(
       "http://localhost:3000/product/all-products",
       {
@@ -24,7 +23,6 @@ const fetchProducts = async () => {
         },
       }
     );
-    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error("Error fetching products:", {
@@ -37,4 +35,27 @@ const fetchProducts = async () => {
   }
 };
 
-export { fetchCategories, fetchProducts };
+const fetchReviews = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    const response = await axios.get(
+      "http://localhost:3000/reviews/all-reviews",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching reviews:", {
+      message: error.message,
+      config: error.config,
+      request: error.request,
+      response: error.response,
+    });
+    throw error;
+  }
+};
+
+export { fetchCategories, fetchProducts, fetchReviews };
