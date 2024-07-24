@@ -20,18 +20,6 @@ function Account() {
             >
               Dashboard
             </Link>
-            <Link
-              to="/purchases"
-              className="flex items-center px-4 py-2 text-xl font-bold mb-1 border-b border-gray-300 last:border-none"
-            >
-              Purchases
-            </Link>
-            <Link
-              to="/listings"
-              className="flex items-center px-4 py-2 text-xl font-bold mb-1 border-b border-gray-300 last:border-none"
-            >
-              Listings
-            </Link>
             <Link to={"/"}>
               {" "}
               <button

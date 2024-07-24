@@ -54,14 +54,14 @@ function AddItemModal({ isOpen, onClose }) {
     data.append("category", formData.category);
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 30000));
+      await new Promise((resolve) => setTimeout(resolve, 60000));
 
       const response = await axios.post("/api/product/add-product", data, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
-        timeout: 30000,
+        timeout: 60000,
       });
       console.log("Product added successfully:", response.data);
       onClose();

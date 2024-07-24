@@ -13,6 +13,10 @@ router.post("/add-product", authMiddleware, async (req, res) => {
     const { name, description, price, category } = req.body;
     const images = req.files.images;
 
+    if (!images) {
+      return res.status(400).json({ message: "No images provided" });
+    }
+
     if (!priceschema.validate(price)) {
       return res.status(400).json({ message: "Invalid price format" });
     }
@@ -28,7 +32,7 @@ router.post("/add-product", authMiddleware, async (req, res) => {
       "INSERT INTO products(name, price, category_id, description, image_urls) VALUES($1, $2, $3, $4, $5) RETURNING id";
     const result = await client.query(insertProductQuery, [
       name,
-      Number(price),
+      price,
       category,
       description,
       imageUrls,
@@ -38,6 +42,7 @@ router.post("/add-product", authMiddleware, async (req, res) => {
     await client.query("COMMIT");
 
     res.status(201).json({ productId });
+    console.log("Product added successfully");
   } catch (err) {
     await client.query("ROLLBACK");
     console.error("Error adding product", err.stack);

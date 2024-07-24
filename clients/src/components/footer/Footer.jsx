@@ -2,7 +2,7 @@ import React from "react";
 
 function Footer() {
   return (
-    <footer className="bg-gray-800 text-white p-6 text-center min-h-screen md:min-h-[55vh]">
+    <footer className="bg-gray-800 text-white p-6 text-center min-h-screen md:min-h-[30vh]">
       <div className="container mx-auto flex flex-wrap justify-between items-center">
         <div className="flex-1 md:flex md:items-center">
           <span className="text-xl font-semibold">ATUM & DAVY STORE</span>
