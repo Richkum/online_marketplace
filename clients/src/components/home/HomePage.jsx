@@ -2,17 +2,24 @@ import React, { useState, useEffect } from "react";
 import Navbar from "../navbar/navbar";
 import { Link } from "react-router-dom";
 import Footer from "../footer/Footer";
-import { fetchProducts, fetchCategories } from "../../apiCalls/fetchData";
+import {
+  fetchProducts,
+  fetchCategories,
+  fetchSearchProducts,
+} from "../../apiCalls/fetchData";
 
 function ProductsPage() {
-  const [productss, setProducts] = useState([]);
+  const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 12;
 
   useEffect(() => {
     const getProducts = async () => {
       try {
-        const productss = await fetchProducts();
-        setProducts(productss);
+        const products = await fetchProducts();
+        setProducts(products);
       } catch (error) {
         console.error("Error fetching products:", error);
       }
@@ -34,14 +41,10 @@ function ProductsPage() {
     getCategories();
   }, []);
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 12;
-
-  const totalPages = Math.ceil(productss.length / itemsPerPage);
-
+  const totalPages = Math.ceil(products.length / itemsPerPage);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = productss.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = products.slice(indexOfFirstItem, indexOfLastItem);
 
   const handleClick = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -56,6 +59,21 @@ function ProductsPage() {
   const handleNextClick = () => {
     if (currentPage < totalPages) {
       setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const handleSearch = async () => {
+    try {
+      const searchResults = await fetchSearchProducts(searchTerm);
+      console.log("Search results:", searchResults);
+      setProducts(searchResults);
+      setCurrentPage(1);
+    } catch (error) {
+      console.error("Error fetching search results:", error);
     }
   };
 
@@ -90,11 +108,19 @@ function ProductsPage() {
               type="text"
               className="block w-full px-4 py-2 border border-l-0 border-gray-300 rounded-r-md bg-white text-gray-600 focus:outline-none focus:shadow-outline ml-[-1px]"
               placeholder="Search products..."
+              value={searchTerm}
+              onChange={handleSearchChange}
             />
+            <button
+              onClick={handleSearch}
+              className="ml-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-700 focus:outline-none"
+            >
+              Search
+            </button>
           </div>
         </div>
       </div>
-      <div className=" min-h-screen">
+      <div className="min-h-screen">
         <div className="container mx-auto px-4 py-16 text-center">
           <h1 className="text-4xl font-bold text-gray-800 sm:text-5xl">
             Products
@@ -104,12 +130,8 @@ function ProductsPage() {
           </p>
           <div className="mt-8 grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
             {currentItems.map((product) => (
-              <Link to={`/products/${product.id}`}>
-                {" "}
-                <div
-                  key={product.id}
-                  className="bg-gray-100 p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out"
-                >
+              <Link to={`/products/${product.id}`} key={product.id}>
+                <div className="bg-gray-100 p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out">
                   <img
                     src={product.image_urls[0]}
                     alt={product.name}
@@ -156,7 +178,6 @@ function ProductsPage() {
           </div>
         </div>
       </div>
-
       <Footer />
     </>
   );

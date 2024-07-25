@@ -2,10 +2,11 @@ import express from "express";
 import pool from "../db.config/index.js";
 import { priceschema } from "../vallidation/index.js";
 import uploadImageToCloudinary from "../middleware/multer.js";
+import authMiddleware from "../middleware/authIndex.js";
 
 const router = express.Router();
 
-router.post("/add-product", async (req, res) => {
+router.post("/add-product", authMiddleware, async (req, res) => {
   const client = await pool.connect();
 
   try {
@@ -56,6 +57,28 @@ router.get("/all-products", async (req, res) => {
     res
       .status(500)
       .json({ message: "Internal server error", error: err.message });
+  }
+});
+
+router.get("/search-products", async (req, res) => {
+  const client = await pool.connect();
+
+  try {
+    const keyword = req.query.keyword || "";
+
+    const escapedKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+    const result = await client.query(
+      `SELECT * FROM products WHERE name ILIKE $1`,
+      [`%${escapedKeyword}%`]
+    );
+
+    res.send(result.rows);
+  } catch (error) {
+    console.error("Error Searching products:", error.stack);
+    return res.status(500).json({ message: "Internal server error" });
+  } finally {
+    client.release();
   }
 });
 
