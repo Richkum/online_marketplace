@@ -37,7 +37,7 @@ router.post("/add-review", authMiddleware, async (req, res) => {
   }
 });
 
-router.get("/all-reviews", async (req, res) => {
+router.get("/all-reviews", authMiddleware, async (req, res) => {
   const client = await pool.connect();
   try {
     const result = await client.query("SELECT * FROM reviews");

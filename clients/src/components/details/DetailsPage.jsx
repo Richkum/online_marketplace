@@ -30,6 +30,7 @@ function DetailsPage() {
       const response = await axios.get(
         `http://localhost:3000/reviews/review/${productId}`
       );
+      console.log(response.data);
       setReviews(response.data);
     } catch (error) {
       console.error("Error fetching reviews:", error);
