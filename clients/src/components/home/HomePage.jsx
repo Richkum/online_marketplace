@@ -12,6 +12,7 @@ function ProductsPage() {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
 
@@ -66,14 +67,33 @@ function ProductsPage() {
     setSearchTerm(event.target.value);
   };
 
-  const handleSearch = async () => {
+  const handleSearchKeyDown = async (event) => {
+    if (event.key === "Enter") {
+      try {
+        const searchResults = await fetchSearchProducts(
+          searchTerm,
+          selectedCategory
+        );
+        console.log("Search results:", searchResults);
+        setProducts(searchResults);
+        setCurrentPage(1);
+      } catch (error) {
+        console.error("Error fetching search results:", error);
+      }
+    }
+  };
+
+  const handleCategoryChange = async (event) => {
+    setSelectedCategory(event.target.value);
     try {
-      const searchResults = await fetchSearchProducts(searchTerm);
-      console.log("Search results:", searchResults);
-      setProducts(searchResults);
+      const filteredProducts = await fetchSearchProducts(
+        searchTerm,
+        event.target.value
+      );
+      setProducts(filteredProducts);
       setCurrentPage(1);
     } catch (error) {
-      console.error("Error fetching search results:", error);
+      console.error("Error fetching category products:", error);
     }
   };
 
@@ -87,8 +107,12 @@ function ProductsPage() {
         <div className="container mx-auto px-4 py-16 text-center">
           <div className="max-w-md mx-auto flex items-center">
             <div className="relative flex-grow">
-              <select className="block w-full px-4 py-2 border border-gray-300 rounded-l-md appearance-none bg-white text-gray-600 focus:outline-none focus:shadow-outline">
-                <option>All Categories</option>
+              <select
+                className="block w-full px-4 py-2 border border-gray-300 rounded-l-md appearance-none bg-white text-gray-600 focus:outline-none focus:shadow-outline"
+                value={selectedCategory}
+                onChange={handleCategoryChange}
+              >
+                <option value="">All Categories</option>
                 {categories.map((category) => (
                   <option key={category.id} value={category.id}>
                     {category.name}
@@ -110,13 +134,8 @@ function ProductsPage() {
               placeholder="Search products..."
               value={searchTerm}
               onChange={handleSearchChange}
+              onKeyDown={handleSearchKeyDown}
             />
-            <button
-              onClick={handleSearch}
-              className="ml-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-700 focus:outline-none"
-            >
-              Search
-            </button>
           </div>
         </div>
       </div>
