@@ -38,6 +38,13 @@ function Listing() {
           ))}
         </div>
       </div>
+      <div className="bg-gradient-to-r from-blue-400 to-purple-500 p-6 rounded-lg shadow-md text-white text-center mb-8">
+        <h2 className="text-2xl font-bold mb-4">Special Announcement</h2>
+        <p className="text-lg">
+          Don't miss out on our upcoming sale! Get ready to enjoy great
+          discounts and offers on your favorite products.
+        </p>
+      </div>
       <Footer />
     </div>
   );

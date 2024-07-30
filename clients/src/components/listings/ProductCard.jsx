@@ -9,7 +9,7 @@ function ProductCard({ product, onEdit }) {
           src={product.image_urls[0]}
           className="w-full md:w-1/2 object-cover h-64 md:h-auto"
         />
-        <div className="w-full md:w-1/2 p-4">
+        <div className="w-full md:w-1/2 p-6">
           <h2 className="text-2xl font-bold text-gray-800 mb-2">
             {product.name}
           </h2>
@@ -27,7 +27,7 @@ function ProductCard({ product, onEdit }) {
           <div className="flex justify-end">
             <button
               onClick={() => onEdit(product.id)}
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow"
+              className="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded-lg shadow"
             >
               Edit
             </button>
