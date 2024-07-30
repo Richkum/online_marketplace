@@ -9,14 +9,17 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token) {
+    const userId = localStorage.getItem("id");
+    if (token && userId) {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       setIsAuthenticated(true);
+      setUser({ id: userId });
     }
   }, []);
 
   const login = (userData) => {
     localStorage.setItem("token", userData.token);
+    localStorage.setItem("id", userData.user.id);
     axios.defaults.headers.common["Authorization"] = `Bearer ${userData.token}`;
     setIsAuthenticated(true);
     setUser(userData.user);
@@ -24,6 +27,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("id");
     delete axios.defaults.headers.common["Authorization"];
     setIsAuthenticated(false);
     setUser(null);
