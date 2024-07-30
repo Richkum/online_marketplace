@@ -58,4 +58,31 @@ const fetchReviews = async () => {
   }
 };
 
-export { fetchCategories, fetchProducts, fetchReviews };
+const fetchUserProducts = async (userId) => {
+  try {
+    const token = localStorage.getItem("token");
+    // if (!token) {
+    //   throw new Error("Authentication token is missing");
+    // }
+
+    const response = await axios.get(
+      `http://localhost:3000/product/user-products/${userId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching user products:", {
+      message: error.message,
+      config: error.config,
+      request: error.request,
+      response: error.response,
+    });
+    throw error;
+  }
+};
+
+export { fetchCategories, fetchProducts, fetchReviews, fetchUserProducts };

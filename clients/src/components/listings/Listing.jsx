@@ -1,9 +1,26 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../navbar/navbar";
 import Footer from "../footer/Footer";
 import ProductCard from "./ProductCard";
+import { fetchUserProducts } from "../../apiCalls/fetchData";
 
 function Listing() {
+  const [products, setProducts] = useState([]);
+  useEffect(() => {
+    const getUserProducts = async () => {
+      try {
+        const userId = localStorage.getItem("user_id");
+        const products = await fetchUserProducts(userId);
+        console.log(products);
+        setProducts(products);
+      } catch (error) {
+        console.error("Error fetching user products:", error);
+      }
+    };
+
+    getUserProducts();
+  }, []);
+
   return (
     <div>
       <Navbar />

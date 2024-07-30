@@ -65,4 +65,20 @@ router.get("/all-products", async (req, res) => {
   }
 });
 
+router.get("/user-products/:user_id", authMiddleware, async (req, res) => {
+  try {
+    const { user_id } = req.params;
+    const { rows } = await pool.query(
+      "SELECT p.*, c.category_name FROM products p JOIN categories c ON p.category_id = c.id WHERE p.user_id = $1",
+      [user_id]
+    );
+    res.send(rows);
+  } catch (err) {
+    console.error("Error fetching user products:", err.stack);
+    res
+      .status(500)
+      .json({ message: "Internal server error", error: err.message });
+  }
+});
+
 export default router;
