@@ -9,6 +9,7 @@ import DetailsPage from "./components/details/DetailsPage";
 import Carts from "./components/carts/Carts";
 import { AuthProvider } from "./contex/Authcontext";
 import Listing from "./components/listings/Listing";
+import ReviewsPage from "./components/reviews/ReviewsPage";
 function App() {
   return (
     <>
@@ -23,6 +24,7 @@ function App() {
             <Route path="/products/:id" element={<DetailsPage />} />
             <Route path="/carts" element={<Carts />} />
             <Route path="/listings" element={<Listing />} />
+            <Route path="/reviews" element={<ReviewsPage />} />
           </Routes>
         </Router>
       </AuthProvider>
