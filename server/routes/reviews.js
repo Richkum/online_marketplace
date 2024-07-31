@@ -2,6 +2,7 @@ import express from "express";
 import pool from "../db.config/index.js";
 import { reviewSchema } from "../vallidation/index.js";
 import authMiddleware from "../middleware/authIndex.js";
+import getUserProducts from "./utils.js";
 
 const router = express.Router();
 
@@ -66,6 +67,24 @@ router.get("/review/:product_id", authMiddleware, async (req, res) => {
   } finally {
     client.release();
   }
+});
+
+router.get("/user-product-reviews/:id", authMiddleware, async (req, res) => {
+  try {
+    const id = req.params.id;
+    const productIds = await getUserProducts(id);
+
+    if (productIds.length === 0) {
+      return res.json([]);
+    }
+
+    const { rows } = await pool.query(
+      "SELECT r.*, p.name AS product_name, u.username AS reviewer_username FROM reviews r JOIN products p ON r.product_id = p.id JOIN users u ON r.user_id = u.id WHERE r.product_id = ANY($1::int[])",
+      [productIds]
+    );
+    console.log(rows);
+    res.send(rows);
+  } catch (error) {}
 });
 
 export default router;
