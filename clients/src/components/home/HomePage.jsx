@@ -9,15 +9,15 @@ import {
 } from "../../apiCalls/fetchData";
 
 function ProductsPage() {
-  const [productss, setProducts] = useState([]);
+  const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [Rating, setrating] = useState([]);
 
   useEffect(() => {
     const getProducts = async () => {
       try {
-        const productss = await fetchProducts();
-        setProducts(productss);
+        const products = await fetchProducts();
+        setProducts(products);
       } catch (error) {
         console.error("Error fetching products:", error);
       }
@@ -39,14 +39,10 @@ function ProductsPage() {
     getCategories();
   }, []);
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 12;
-
-  const totalPages = Math.ceil(productss.length / itemsPerPage);
-
+  const totalPages = Math.ceil(products.length / itemsPerPage);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = productss.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = products.slice(indexOfFirstItem, indexOfLastItem);
 
   const handleClick = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -61,6 +57,40 @@ function ProductsPage() {
   const handleNextClick = () => {
     if (currentPage < totalPages) {
       setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const handleSearchKeyDown = async (event) => {
+    if (event.key === "Enter") {
+      try {
+        const searchResults = await fetchSearchProducts(
+          searchTerm,
+          selectedCategory
+        );
+        console.log("Search results:", searchResults);
+        setProducts(searchResults);
+        setCurrentPage(1);
+      } catch (error) {
+        console.error("Error fetching search results:", error);
+      }
+    }
+  };
+
+  const handleCategoryChange = async (event) => {
+    setSelectedCategory(event.target.value);
+    try {
+      const filteredProducts = await fetchSearchProducts(
+        searchTerm,
+        event.target.value
+      );
+      setProducts(filteredProducts);
+      setCurrentPage(1);
+    } catch (error) {
+      console.error("Error fetching category products:", error);
     }
   };
 
@@ -103,6 +133,9 @@ function ProductsPage() {
               type="text"
               className="block w-full px-5 py-3 border border-l-0 border-gray-300 rounded-r-md bg-white text-gray-600 focus:outline-none focus:shadow-outline text-lg ml-[-1px]"
               placeholder="Search products..."
+              value={searchTerm}
+              onChange={handleSearchChange}
+              onKeyDown={handleSearchKeyDown}
             />
           </div>
         </div>
@@ -118,12 +151,8 @@ function ProductsPage() {
           </p>
           <div className="mt-8 grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
             {currentItems.map((product) => (
-              <Link to={`/products/${product.id}`}>
-                {" "}
-                <div
-                  key={product.id}
-                  className="bg-gray-100 p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out"
-                >
+              <Link to={`/products/${product.id}`} key={product.id}>
+                <div className="bg-gray-100 p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out">
                   <img
                     src={product.image_urls[0]}
                     alt={product.name}
@@ -170,7 +199,6 @@ function ProductsPage() {
           </div>
         </div>
       </div>
-
       <Footer />
     </>
   );
