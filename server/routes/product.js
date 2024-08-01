@@ -3,6 +3,7 @@ import pool from "../db.config/index.js";
 import { priceschema } from "../vallidation/index.js";
 import uploadImageToCloudinary from "../middleware/multer.js";
 import authMiddleware from "../middleware/authIndex.js";
+import getUserProducts from "./utils.js";
 
 const router = express.Router();
 
@@ -59,6 +60,23 @@ router.get("/all-products", async (req, res) => {
     const { rows } = await pool.query("SELECT * FROM products");
     res.send(rows);
   } catch (err) {
+    res
+      .status(500)
+      .json({ message: "Internal server error", error: err.message });
+  }
+});
+
+router.get("/user-products/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const productIds = await getUserProducts(id);
+    const { rows } = await pool.query(
+      "SELECT p.*, c.name FROM products p JOIN categories c ON p.category_id = c.id WHERE p.id = ANY($1::int[])",
+      [productIds]
+    );
+    res.send(rows);
+  } catch (err) {
+    console.error("Error fetching user products:", err.stack);
     res
       .status(500)
       .json({ message: "Internal server error", error: err.message });
