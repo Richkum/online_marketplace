@@ -5,13 +5,16 @@ import Footer from "../footer/Footer";
 import {
   fetchProducts,
   fetchCategories,
-  fetchReviews,
+  fetchSearchProducts,
 } from "../../apiCalls/fetchData";
 
 function ProductsPage() {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [Rating, setrating] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 12;
 
   useEffect(() => {
     const getProducts = async () => {
@@ -112,8 +115,12 @@ function ProductsPage() {
         <div className="relative container mx-auto px-4 py-24 text-center">
           <div className="max-w-lg mx-auto flex items-center">
             <div className="relative flex-grow">
-              <select className="block w-full px-5 py-3 border border-gray-300 rounded-l-md appearance-none bg-white text-gray-600 focus:outline-none focus:shadow-outline text-lg">
-                <option>All Categories</option>
+              <select
+                className="block w-full px-4 py-2 border border-gray-300 rounded-l-md appearance-none bg-white text-gray-600 focus:outline-none focus:shadow-outline"
+                value={selectedCategory}
+                onChange={handleCategoryChange}
+              >
+                <option value="">All Categories</option>
                 {categories.map((category) => (
                   <option key={category.id} value={category.id}>
                     {category.name}
@@ -140,8 +147,7 @@ function ProductsPage() {
           </div>
         </div>
       </div>
-
-      <div className=" min-h-screen">
+      <div className="min-h-screen">
         <div className="container mx-auto px-4 py-16 text-center">
           <h1 className="text-4xl font-bold text-gray-800 sm:text-5xl">
             Products
