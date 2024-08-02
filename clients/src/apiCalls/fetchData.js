@@ -111,10 +111,34 @@ const fetchUserProducts = async (userId) => {
   }
 };
 
+const usersAddedToCart = async (userId) => {
+  try {
+    const token = localStorage.getItem("token");
+    const response = await axios.get(
+      `http://localhost:3000/carts/user-cart/${userId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching user products:", {
+      message: error.message,
+      config: error.config,
+      request: error.request,
+      response: error.response,
+    });
+    throw error;
+  }
+};
+
 export {
   fetchCategories,
   fetchProducts,
   fetchReviews,
   fetchUserProducts,
   fetchSearchProducts,
+  usersAddedToCart,
 };

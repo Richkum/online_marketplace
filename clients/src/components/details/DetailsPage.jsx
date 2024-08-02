@@ -1,16 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import Navbar from "../navbar/navbar";
 import Footer from "../footer/Footer";
 import { fetchProducts } from "../../apiCalls/fetchData";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { AuthContext } from "../../contex/Authcontext";
 
 function DetailsPage() {
+  const { user } = useContext(AuthContext);
+  const quantitty = 1;
+
   const [products, setProducts] = useState([]);
   const [reviews, setReviews] = useState([]);
-  const [newReview, setNewReview] = useState([]);
+  const [newReview, setNewReview] = useState("");
   const [rating, setRating] = useState(0);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   useEffect(() => {
     fetchProducts().then((data) => setProducts(data));
@@ -30,10 +35,27 @@ function DetailsPage() {
       const response = await axios.get(
         `http://localhost:3000/reviews/review/${productId}`
       );
-      console.log(response.data);
       setReviews(response.data);
     } catch (error) {
       console.error("Error fetching reviews:", error);
+    }
+  };
+
+  const handleAddToCart = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/carts/add-to-cart",
+        {
+          user_id: user.id,
+          product_id: product.id,
+          quantity: quantitty,
+        }
+      );
+      console.log(response.data);
+      alert(response.data.message);
+    } catch (error) {
+      console.error("Error adding product to cart:", error);
+      alert("There was an error adding the product to the cart.");
     }
   };
 
@@ -58,19 +80,6 @@ function DetailsPage() {
     return totalRating / reviews.length;
   };
 
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
-  if (!product) {
-    return (
-      <>
-        <Navbar />
-        <div className="min-h-screen flex items-center justify-center">
-          <h1 className="text-3xl font-bold">Product not found</h1>
-        </div>
-      </>
-    );
-  }
-
   const handlePrevImage = () => {
     setCurrentImageIndex((prevIndex) =>
       prevIndex === 0 ? product.image_urls.length - 1 : prevIndex - 1
@@ -86,6 +95,17 @@ function DetailsPage() {
   const similarProducts = products.filter(
     (p) => p.id !== product.id && p.category_id === product.category_id
   );
+
+  if (!product) {
+    return (
+      <>
+        <Navbar />
+        <div className="min-h-screen flex items-center justify-center">
+          <h1 className="text-3xl font-bold">Product not found</h1>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>
@@ -131,7 +151,10 @@ function DetailsPage() {
                 </p>
               ))}
             </div>
-            <button className="mt-6 px-6 py-2 bg-blue-500 text-white font-bold rounded-lg hover:bg-blue-600">
+            <button
+              onClick={handleAddToCart}
+              className="mt-6 px-6 py-2 bg-blue-500 text-white font-bold rounded-lg hover:bg-blue-600"
+            >
               Add to Cart
             </button>
           </div>

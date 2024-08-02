@@ -29,7 +29,11 @@ function Navbar() {
     <div className="bg-gray-800 text-white p-4 shadow-md">
       <div className="container mx-auto flex flex-wrap items-center justify-between">
         <div className="flex items-center">
-          <h1 className="text-2xl font-bold mr-6 md:mr-12">Logo</h1>
+          <img
+            src="/images/logo.png"
+            alt="Team Member"
+            className="w-16 h-16 rounded-full mx-auto mr-6 md:mr-12"
+          />
           <nav className="hidden md:flex space-x-6">
             <Link to={"/"}>
               <p className="hover:text-gray-300">Home</p>

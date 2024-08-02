@@ -83,4 +83,26 @@ router.get("/user-products/:id", async (req, res) => {
   }
 });
 
+router.get("/search-products", async (req, res) => {
+  const client = await pool.connect();
+
+  try {
+    const keyword = req.query.keyword || "";
+
+    const escapedKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+    const result = await client.query(
+      `SELECT * FROM products WHERE name ILIKE $1`,
+      [`%${escapedKeyword}%`]
+    );
+
+    res.send(result.rows);
+  } catch (error) {
+    console.error("Error Searching products:", error.stack);
+    return res.status(500).json({ message: "Internal server error" });
+  } finally {
+    client.release();
+  }
+});
+
 export default router;

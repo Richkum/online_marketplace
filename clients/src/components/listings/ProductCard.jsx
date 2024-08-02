@@ -18,9 +18,9 @@ function ProductCard({ product, onEdit }) {
           </p>
           <p className="text-gray-600 mb-4">{product.description}</p>
           <div className="text-sm text-gray-500 mb-4">
-            <p>Uploaded: {new Date(product.createdAt).toLocaleDateString()}</p>
+            <p>Uploaded: {new Date(product.created_at).toLocaleDateString()}</p>
             <p>
-              Last Updated: {new Date(product.updatedAt).toLocaleDateString()}
+              Last Updated: {new Date(product.updated_at).toLocaleDateString()}
             </p>
             <p>Status: {product.isSold ? "Sold" : "Available"}</p>
           </div>
