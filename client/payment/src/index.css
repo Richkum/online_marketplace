@@ -1,0 +1,151 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+form.label{
+  justify-content: center;
+  
+}
+
+#name{
+border-radius: 5px;
+width: auto;
+height: 2rem;
+margin: 1rem;
+}
+#email{
+  border-radius: 5px;
+  width: auto;
+  height: 2rem;
+  margin: 1rem;
+}
+#amount{
+  border-radius: 5px;
+  width: auto;
+  height: 2rem;
+  margin: 1rem;
+}
+#countryCode{
+  border-radius: 5px;
+  width: auto;
+  height: 2.5rem;
+  background-color: #1a1a1a;
+  border: none;
+}
+.container label{
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: x-large;
+}
+#phone{
+  border-radius: 5px;
+  width: auto;
+  height: 2rem;
+  margin: 1rem ;
+}
+#phone1{
+  border-radius: 5px;
+  width: 10px;
+  height: 2rem;
+  background-color: #1a1a1a;
+}
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+.container{
+  border: 1px solid black;
+border-radius: 1rem;
+width: auto; 
+height: auto;
+margin: 1rem;
+
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+  margin: 1rem;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+  margin: 1rem;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+.icon-orange-money {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5.88 12.88c-1.34 1.34-3.12 2.06-5 2.06s-3.66-.72-5-2.06c-1.34-1.34-2.06-3.12-2.06-5s.72-3.66 2.06-5c1.34-1.34 3.12-2.06 5-2.06s3.66.72 5 2.06c1.34 1.34 2.06 3.12 2.06 5s-.72 3.66-2.06 5zm-3.53-5.47l-2.12-2.12c-.2-.2-.51-.2-.71 0l-3.54 3.54c-.2.2-.2.51 0 .71l2.12 2.12c.1.1.23.15.35.15s.25-.05.35-.15l3.54-3.54c.2-.2.2-.51 0-.71z' fill='%23ff6b00'/%3E%3C/svg%3E");
+  margin-right: 1rem;
+}
+
+.payment-form button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0.8rem;
+  background-color: #ff6b00;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.payment-form button:hover {
+  background-color: #d25900;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}
