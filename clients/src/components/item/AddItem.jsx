@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { fetchCategories } from "../../apiCalls/fetchData";
+import { AuthContext } from "../../contex/Authcontext";
 
 function AddItemModal({ isOpen, onClose }) {
+  const { user } = useContext(AuthContext);
+
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     images: [],
@@ -10,6 +13,7 @@ function AddItemModal({ isOpen, onClose }) {
     description: "",
     name: "",
     category: "",
+    user_id: user.id,
   });
 
   const [categories, setCategories] = useState([]);

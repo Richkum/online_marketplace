@@ -43,6 +43,20 @@ function Carts() {
     }
   };
 
+  if (carts.length === 0) {
+    return (
+      <>
+        <Navbar />
+        <div className="container mx-auto px-4 py-8 text-center">
+          <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center md:text-left">
+            You don't have any carts
+          </h1>
+        </div>
+        <Footer />
+      </>
+    );
+  }
+
   return (
     <>
       <Navbar />

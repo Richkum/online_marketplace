@@ -11,7 +11,7 @@ router.post("/add-product", authMiddleware, async (req, res) => {
   const client = await pool.connect();
 
   try {
-    const { name, description, price, category } = req.body;
+    const { name, description, price, category, userId } = req.body;
     const images = req.files.images;
 
     if (!images) {
@@ -30,11 +30,12 @@ router.post("/add-product", authMiddleware, async (req, res) => {
     await client.query("BEGIN");
 
     const insertProductQuery =
-      "INSERT INTO products(name, price, category_id, description, image_urls) VALUES($1, $2, $3, $4, $5) RETURNING id";
+      "INSERT INTO products(name, price, category_id, description, user_id, image_urls) VALUES($1, $2, $3, $4, $5, $6) RETURNING id";
     const result = await client.query(insertProductQuery, [
       name,
       price,
       category,
+      userId,
       description,
       imageUrls,
     ]);
