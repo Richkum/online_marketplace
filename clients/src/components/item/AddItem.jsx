@@ -13,7 +13,6 @@ function AddItemModal({ isOpen, onClose }) {
     description: "",
     name: "",
     category: "",
-    // user_id: user.id,
   });
 
   const [categories, setCategories] = useState([]);
@@ -43,7 +42,7 @@ function AddItemModal({ isOpen, onClose }) {
     const files = e.target.files;
     if (files && files.length > 0) {
       const newImages = [...formData.images, ...Array.from(files)];
-      setFormData({ ...formData, images: newImages.slice(0, 8) });
+      setFormData({ ...formData, images: newImages.slice(0, 8) }); // Limit to 8 images
     }
   };
 
@@ -58,14 +57,14 @@ function AddItemModal({ isOpen, onClose }) {
     data.append("category", formData.category);
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 60000));
+      // Adding a 5-second delay
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       const response = await axios.post("/api/product/add-product", data, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
-        timeout: 60000,
       });
       console.log("Product added successfully:", response.data);
       onClose();
@@ -73,10 +72,7 @@ function AddItemModal({ isOpen, onClose }) {
       if (err.response) {
         console.error("Error adding product:", err.response.data.message);
       } else if (err.request) {
-        console.error(
-          "Error adding product: No response received",
-          err.request
-        );
+        console.error("Error adding product: No response received", err.request);
       } else {
         console.error("Error adding product:", err);
       }
@@ -100,10 +96,7 @@ function AddItemModal({ isOpen, onClose }) {
         <h2 className="text-2xl font-bold mb-4">Add Item</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label
-              className="block text-gray-700 font-bold mb-2"
-              htmlFor="images"
-            >
+            <label className="block text-gray-700 font-bold mb-2" htmlFor="images">
               Images
             </label>
             <input
@@ -145,79 +138,36 @@ function AddItemModal({ isOpen, onClose }) {
             )}
           </div>
           <div className="mb-4">
-            <label
-              className="block text-gray-700 font-bold mb-2"
-              htmlFor="price"
-            >
-              Price($)
-            </label>
-            <input
-              id="price"
-              name="price"
-              type="number"
-              value={formData.price}
-              onChange={handleChange}
-              className="border border-gray-200 p-2 w-full outline-none"
-            />
-          </div>
-          <div className="mb-4">
-            <label
-              className="block text-gray-700 font-bold mb-2"
-              htmlFor="description"
-            >
-              Description
-            </label>
-            <textarea
-              id="description"
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              className="border border-gray-200 p-2 w-full outline-none"
-            ></textarea>
-          </div>
-          <div className="mb-4">
-            <label
-              className="block text-gray-700 font-bold mb-2"
-              htmlFor="name"
-            >
-              Name
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              className="border border-gray-200 p-2 w-full outline-none"
-            />
-          </div>
-          <div className="mb-4">
-            <label
-              className="block text-gray-700 font-bold mb-2"
-              htmlFor="category"
-            >
-              Category
-            </label>
-            <select
-              id="category"
-              name="category"
-              value={formData.category}
-              onChange={handleChange}
-              className=" p-2 w-full bg-white outline-none"
-            >
-              <option value="">Select Category</option>
-              {categories.map((category) => (
-                <option
-                  key={category.id}
-                  value={category.id}
-                  className="bg-white border p-2"
-                >
-                  {category.name}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="flex justify-end">
+<label className="block text-gray-700 font-bold mb-2" htmlFor="price" >
+Price($)
+</label>
+<input id="price" name="price" type="number" value={formData.price} onChange={handleChange} className="border border-gray-200 p-2 w-full outline-none" />
+</div>
+<div className="mb-4">
+<label className="block text-gray-700 font-bold mb-2" htmlFor="description" >
+Description
+</label>
+<textarea id="description" name="description" value={formData.description} onChange={handleChange} className="border border-gray-200 p-2 w-full outline-none" ></textarea>
+</div>
+<div className="mb-4">
+<label className="block text-gray-700 font-bold mb-2" htmlFor="name" >
+Name
+</label>
+<input type="text" id="name" name="name" value={formData.name} onChange={handleChange} className="border border-gray-200 p-2 w-full outline-none" />
+</div>
+<div className="mb-4">
+<label className="block text-gray-700 font-bold mb-2" htmlFor="category" >
+Category
+</label>
+<select id="category" name="category" value={formData.category} onChange={handleChange} className=" p-2 w-full bg-white outline-none" >
+<option value="">Select Category</option>
+{categories.map((category) => (
+<option key={category.id} value={category.id} className="bg-white border p-2" >
+{category.name}
+</option>
+))}
+</select>
+</div>          <div className="flex justify-end">
             <button
               type="button"
               onClick={() => console.log(formData)}
@@ -235,9 +185,7 @@ function AddItemModal({ isOpen, onClose }) {
           </div>
           {isLoading && (
             <div className="text-center mt-4">
-              <p className="text-gray-700">
-                Adding item. This might take a while.
-              </p>
+              <p className="text-gray-700">Adding item. This might take a bit.</p>
             </div>
           )}
         </form>

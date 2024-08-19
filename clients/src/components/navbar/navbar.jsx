@@ -25,25 +25,27 @@ function Navbar() {
     setIsAuthModalOpen(false);
   };
 
+  const renderLink = (text, to) => {
+    return (
+      <Link to={to}>
+        <span className="navbar-link">{text}</span>
+      </Link>
+    );
+  };
+
   return (
     <div className="bg-gray-800 text-white p-4 shadow-md">
       <div className="container mx-auto flex flex-wrap items-center justify-between">
         <div className="flex items-center">
           <img
-            src="/images/logo.png"
+            src="/images/ATUM & DAVY (1).png"
             alt="Team Member"
             className="w-16 h-16 rounded-full mx-auto mr-6 md:mr-12"
           />
           <nav className="hidden md:flex space-x-6">
-            <Link to={"/"}>
-              <p className="hover:text-gray-300">Home</p>
-            </Link>
-            <Link to={"/about"}>
-              <p className="hover:text-gray-300">About Us</p>
-            </Link>
-            <Link to={"/contact"}>
-              <p className="hover:text-gray-300">Contact</p>
-            </Link>
+            {renderLink("Home", "/")}
+            {renderLink("About Us", "/about")}
+            {renderLink("Contact", "/contact")}
           </nav>
           <button
             className="md:hidden text-white focus:outline-none"
@@ -77,15 +79,9 @@ function Navbar() {
         {isMobileMenuOpen && (
           <div className="md:hidden">
             <nav className="flex flex-col p-4 bg-gray-700">
-              <Link to={"/"} onClick={toggleMobileMenu}>
-                <p className="hover:text-gray-300 py-2">Home</p>
-              </Link>
-              <Link to={"/about"} onClick={toggleMobileMenu}>
-                <p className="hover:text-gray-300 py-2">About Us</p>
-              </Link>
-              <Link to={"/contact"} onClick={toggleMobileMenu}>
-                <p className="hover:text-gray-300 py-2">Contact</p>
-              </Link>
+              {renderLink("Home", "/")}
+              {renderLink("About Us", "/about")}
+              {renderLink("Contact", "/contact")}
             </nav>
           </div>
         )}
@@ -106,6 +102,16 @@ function Navbar() {
           </div>
         )}
       </div>
+      <style jsx>{`
+        .navbar-link {
+          display: inline-block;
+          transition: transform 0.3s;
+        }
+
+        .navbar-link:hover {
+          transform: translateY(-5px);
+        }
+      `}</style>
     </div>
   );
 }

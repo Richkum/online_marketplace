@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import Navbar from "../navbar/navbar";
 import { Link } from "react-router-dom";
 import Footer from "../footer/Footer";
@@ -100,9 +101,12 @@ function ProductsPage() {
   return (
     <>
       <Navbar />
-      <div
+      <motion.div
         className="relative bg-no-repeat bg-cover bg-center"
         style={{ backgroundImage: "url('/images/blog-header.jpg')" }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
       >
         <div className="container mx-auto px-4 py-16 text-center">
           <div className="max-w-md mx-auto flex items-center">
@@ -138,7 +142,7 @@ function ProductsPage() {
             />
           </div>
         </div>
-      </div>
+      </motion.div>
       <div className="min-h-screen">
         <div className="container mx-auto px-4 py-16 text-center">
           <h1 className="text-4xl font-bold text-gray-800 sm:text-5xl">
@@ -150,7 +154,13 @@ function ProductsPage() {
           <div className="mt-8 grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
             {currentItems.map((product) => (
               <Link to={`/products/${product.id}`} key={product.id}>
-                <div className="bg-gray-100 p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out">
+                <motion.div
+                  className="bg-gray-100 p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out"
+                  whileHover={{ scale: 1.05 }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                >
                   <img
                     src={product.image_urls[0]}
                     alt={product.name}
@@ -164,7 +174,7 @@ function ProductsPage() {
                       $ {product.price}
                     </p>
                   </div>
-                </div>
+                </motion.div>
               </Link>
             ))}
           </div>
