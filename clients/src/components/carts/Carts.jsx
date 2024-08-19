@@ -15,9 +15,8 @@ function Carts() {
     const fetchCarts = async () => {
       if (user && user.id) {
         try {
-          const carts = await usersAddedToCart(user.id);
-          console.log(carts);
-          setCarts(carts);
+          const cartData = await usersAddedToCart(user.id);
+          setCarts(cartData);
         } catch (error) {
           console.error("Error fetching carts:", error);
         }
@@ -27,27 +26,31 @@ function Carts() {
   }, [user]);
 
   const handleRemoveFromCart = async (productId) => {
-    try {
-      const response = await axios.delete(
-        "http://localhost:3000/carts/remove-from-cart",
-        {
-          data: {
-            user_id: user.id,
-            product_id: productId,
-          },
-        }
-      );
-      alert(response.data.message);
-      window.location.reload();
-    } catch (error) {
-      console.error("Error removing product from cart:", error);
-      alert("There was an error removing the product from the cart.");
-    }
+    // ... existing remove logic
+  };
+
+  const handleIncrement = (productId) => {
+    setCarts((prevCarts) =>
+      prevCarts.map((cart) =>
+        cart.product_id === productId
+          ? { ...cart, quantity: cart.quantity + 1 }
+          : cart
+      )
+    );
+  };
+
+  const handleDecrement = (productId) => {
+    setCarts((prevCarts) =>
+      prevCarts.map((cart) =>
+        cart.product_id === productId && cart.quantity > 1
+          ? { ...cart, quantity: cart.quantity - 1 }
+          : cart
+      )
+    );
   };
 
   const handleCheckout = () => {
     const totalAmount = carts.reduce((total, cart) => total + cart.product_price * cart.quantity, 0);
-    // Navigate to PaymentForm with state
     navigate('/payment', { state: { totalAmount, userId: user.id } });
   };
 
@@ -85,9 +88,21 @@ function Carts() {
               />
               <div className="flex justify-between items-center mt-2">
                 <p className="text-black font-bold">$ {cart.product_name}</p>
-                <p className="text-gray-600">
-                  Quantity: <strong>{cart.quantity}</strong>
-                </p>
+                <div className="flex items-center">
+                  <button
+                    className="bg-gray-300 text-black px-2 py-1 rounded"
+                    onClick={() => handleDecrement(cart.product_id)}
+                  >
+                    -
+                  </button>
+                  <p className="mx-2">{cart.quantity}</p>
+                  <button
+                    className="bg-gray-300 text-black px-2 py-1 rounded"
+                    onClick={() => handleIncrement(cart.product_id)}
+                  >
+                    +
+                  </button>
+                </div>
               </div>
               <div className="flex justify-between items-center mt-2">
                 <p className="text-gray-600 font-semibold">

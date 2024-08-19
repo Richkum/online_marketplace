@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import Navbar from "../navbar/navbar";
 import { Link } from "react-router-dom";
 import Footer from "../footer/Footer";
+import ImageCarousel from "../ImgCarossel/carossel";
 import {
   fetchProducts,
   fetchCategories,
@@ -26,7 +27,6 @@ function ProductsPage() {
         console.error("Error fetching products:", error);
       }
     };
-
     getProducts();
   }, []);
 
@@ -39,7 +39,6 @@ function ProductsPage() {
         console.error("Error fetching categories:", error);
       }
     };
-
     getCategories();
   }, []);
 
@@ -75,7 +74,6 @@ function ProductsPage() {
           searchTerm,
           selectedCategory
         );
-        console.log("Search results:", searchResults);
         setProducts(searchResults);
         setCurrentPage(1);
       } catch (error) {
@@ -102,13 +100,23 @@ function ProductsPage() {
     <>
       <Navbar />
       <motion.div
-        className="relative bg-no-repeat bg-cover bg-center"
-        style={{ backgroundImage: "url('/images/blog-header.jpg')" }}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
+        className="relative"
+        style={{ height: "200px" }} // Adjust the height as needed
       >
-        <div className="container mx-auto px-4 py-16 text-center">
+        <ImageCarousel 
+          className="absolute inset-0 z-0" // Set z-index for the carousel
+          const images = {[
+             '/images/blog-header.jpg',
+             '/images/blog-header.jpg'
+
+            ]}
+          
+        />
+        <div
+          className="absolute inset-0 bg-no-repeat bg-cover bg-center"
+          style={{ backgroundImage: "url('/images/blog-header.jpg')" }}
+        />
+        <div className="container mx-auto px-4 py-16 text-center relative z-10">
           <div className="max-w-md mx-auto flex items-center">
             <div className="relative flex-grow">
               <select
@@ -143,11 +151,10 @@ function ProductsPage() {
           </div>
         </div>
       </motion.div>
+
       <div className="min-h-screen">
         <div className="container mx-auto px-4 py-16 text-center">
-          <h1 className="text-4xl font-bold text-gray-800 sm:text-5xl">
-            Products
-          </h1>
+          <h1 className="text-4xl font-bold text-gray-800 sm:text-5xl">Products</h1>
           <p className="mt-4 text-gray-600 sm:text-xl">
             Discover amazing products and deals just for you!
           </p>
@@ -167,12 +174,8 @@ function ProductsPage() {
                     className="w-full h-48 object-cover rounded-t-lg"
                   />
                   <div className="mt-4">
-                    <h2 className="text-lg font-semibold text-gray-800">
-                      {product.name}
-                    </h2>
-                    <p className="mt-2 text-gray-600 font-semibold">
-                      $ {product.price}
-                    </p>
+                    <h2 className="text-lg font-semibold text-gray-800">{product.name}</h2>
+                    <p className="mt-2 text-gray-600 font-semibold">$ {product.price}</p>
                   </div>
                 </motion.div>
               </Link>
@@ -190,9 +193,7 @@ function ProductsPage() {
               <button
                 key={index}
                 onClick={() => handleClick(index + 1)}
-                className={`px-3 py-1 mx-1 bg-blue-500 text-white font-medium text-lg rounded-full hover:bg-blue-600 focus:outline-none focus:shadow-outline transition duration-300 ease-in-out ${
-                  currentPage === index + 1 ? "bg-blue-700" : ""
-                }`}
+                className={`px-3 py-1 mx-1 bg-blue-500 text-white font-medium text-lg rounded-full hover:bg-blue-600 focus:outline-none focus:shadow-outline transition duration-300 ease-in-out ${currentPage === index + 1 ? "bg-blue-700" : ""}`}
               >
                 {index + 1}
               </button>
