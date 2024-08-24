@@ -1,4 +1,3 @@
-// authIndex.js
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { getUserById } from "../models/userModel.js";

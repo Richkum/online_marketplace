@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../navbar/navbar";
 import Footer from "../footer/Footer";
 import { usersAddedToCart } from "../../apiCalls/fetchData";
@@ -8,6 +9,7 @@ import axios from "axios";
 function Carts() {
   const { user } = useContext(AuthContext);
   const [carts, setCarts] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCarts = async () => {
@@ -36,11 +38,24 @@ function Carts() {
         }
       );
       alert(response.data.message);
-      window.location.reload();
+      setCarts((prevCarts) =>
+        prevCarts.filter((cart) => cart.product_id !== productId)
+      );
     } catch (error) {
       console.error("Error removing product from cart:", error);
       alert("There was an error removing the product from the cart.");
     }
+  };
+
+  const calculateTotalPrice = () => {
+    return carts.reduce(
+      (total, cart) => total + cart.product_price * cart.quantity,
+      0
+    );
+  };
+
+  const handleCheckout = () => {
+    navigate("/checkout");
   };
 
   if (carts.length === 0) {
@@ -66,14 +81,17 @@ function Carts() {
         </h1>
         <div className="mt-8 grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
           {carts.map((cart) => (
-            <div className="bg-gray-100 p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out">
+            <div
+              key={cart.product_id}
+              className="bg-gray-100 p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out"
+            >
               <img
                 src={cart.product_image[0]}
                 alt={cart.product_name}
                 className="w-full h-48 object-cover rounded-t-lg"
               />
               <div className="flex justify-between items-center mt-2">
-                <p className="text-black font-bold">$ {cart.product_name}</p>
+                <p className="text-black font-bold">{cart.product_name}</p>
                 <p className="text-gray-600">
                   Quantity: <strong>{cart.quantity}</strong>
                 </p>
@@ -92,8 +110,21 @@ function Carts() {
             </div>
           ))}
         </div>
+        <div className="mt-8">
+          <h2 className="text-2xl font-bold text-gray-400">
+            Total:{" "}
+            <strong className="text-black">
+              ${calculateTotalPrice().toFixed(2)}
+            </strong>
+          </h2>
+          <button
+            className="bg-green-500 text-white px-6 py-3 rounded-lg mt-4 hover:bg-green-600 focus:outline-none"
+            onClick={handleCheckout}
+          >
+            Pay
+          </button>
+        </div>
       </div>
-
       <Footer />
     </>
   );

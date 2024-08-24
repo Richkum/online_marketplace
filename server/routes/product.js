@@ -11,8 +11,10 @@ router.post("/add-product", authMiddleware, async (req, res) => {
   const client = await pool.connect();
 
   try {
-    const { name, description, price, category, userId } = req.body;
+    const { name, description, price, category } = req.body;
     const images = req.files.images;
+    const userId = req.user.id;
+    console.log(name, description, price, category, userId);
 
     if (!images) {
       return res.status(400).json({ message: "No images provided" });
@@ -35,8 +37,8 @@ router.post("/add-product", authMiddleware, async (req, res) => {
       name,
       price,
       category,
-      userId,
       description,
+      userId,
       imageUrls,
     ]);
 

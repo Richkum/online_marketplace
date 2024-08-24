@@ -10,11 +10,12 @@ import Carts from "./components/carts/Carts";
 import { AuthProvider } from "./contex/Authcontext";
 import Listing from "./components/listings/Listing";
 import ReviewsPage from "./components/reviews/ReviewsPage";
+import Checkout from "./components/checkout/Checkout";
 function App() {
   return (
     <>
-      <AuthProvider>
-        <Router>
+      <Router>
+        <AuthProvider>
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/about" element={<AboutUs />} />
@@ -25,9 +26,10 @@ function App() {
             <Route path="/carts" element={<Carts />} />
             <Route path="/listings" element={<Listing />} />
             <Route path="/reviews" element={<ReviewsPage />} />
+            <Route path="/checkout" element={<Checkout />} />
           </Routes>
-        </Router>
-      </AuthProvider>
+        </AuthProvider>
+      </Router>
     </>
   );
 }
