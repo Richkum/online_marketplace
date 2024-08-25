@@ -4,6 +4,9 @@ import Navbar from "../navbar/navbar";
 import { Link } from "react-router-dom";
 import Footer from "../footer/Footer";
 import ImageCarousel from "../ImgCarossel/carossel";
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import "./home.css";
 import {
   fetchProducts,
   fetchCategories,
@@ -47,20 +50,8 @@ function ProductsPage() {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = products.slice(indexOfFirstItem, indexOfLastItem);
 
-  const handleClick = (pageNumber) => {
+  const handlePageClick = (pageNumber) => {
     setCurrentPage(pageNumber);
-  };
-
-  const handlePrevClick = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-
-  const handleNextClick = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
   };
 
   const handleSearchChange = (event) => {
@@ -99,23 +90,12 @@ function ProductsPage() {
   return (
     <>
       <Navbar />
+      <ImageCarousel />
+
       <motion.div
         className="relative"
-        style={{ height: "200px" }} // Adjust the height as needed
+        style={{ height: "200px" }}
       >
-        <ImageCarousel 
-          className="absolute inset-0 z-0" // Set z-index for the carousel
-          const images = {[
-             '/images/blog-header.jpg',
-             '/images/blog-header.jpg'
-
-            ]}
-          
-        />
-        <div
-          className="absolute inset-0 bg-no-repeat bg-cover bg-center"
-          style={{ backgroundImage: "url('/images/blog-header.jpg')" }}
-        />
         <div className="container mx-auto px-4 py-16 text-center relative z-10">
           <div className="max-w-md mx-auto flex items-center">
             <div className="relative flex-grow">
@@ -124,7 +104,7 @@ function ProductsPage() {
                 value={selectedCategory}
                 onChange={handleCategoryChange}
               >
-                <option value="">All Categories</option>
+                <option className="category" value="">All Categories</option>
                 {categories.map((category) => (
                   <option key={category.id} value={category.id}>
                     {category.name}
@@ -142,6 +122,7 @@ function ProductsPage() {
             </div>
             <input
               type="text"
+              id="search"
               className="block w-full px-4 py-2 border border-l-0 border-gray-300 rounded-r-md bg-white text-gray-600 focus:outline-none focus:shadow-outline ml-[-1px]"
               placeholder="Search products..."
               value={searchTerm}
@@ -183,7 +164,7 @@ function ProductsPage() {
           </div>
           <div className="mt-8 flex justify-center">
             <button
-              onClick={handlePrevClick}
+              onClick={() => handlePageClick(currentPage - 1)}
               disabled={currentPage === 1}
               className="px-3 py-1 mx-1 bg-blue-500 text-white font-medium text-lg rounded-full hover:bg-blue-600 focus:outline-none focus:shadow-outline transition duration-300 ease-in-out disabled:bg-gray-400"
             >
@@ -192,14 +173,14 @@ function ProductsPage() {
             {[...Array(totalPages)].map((_, index) => (
               <button
                 key={index}
-                onClick={() => handleClick(index + 1)}
+                onClick={() => handlePageClick(index + 1)}
                 className={`px-3 py-1 mx-1 bg-blue-500 text-white font-medium text-lg rounded-full hover:bg-blue-600 focus:outline-none focus:shadow-outline transition duration-300 ease-in-out ${currentPage === index + 1 ? "bg-blue-700" : ""}`}
               >
                 {index + 1}
               </button>
             ))}
             <button
-              onClick={handleNextClick}
+              onClick={() => handlePageClick(currentPage + 1)}
               disabled={currentPage === totalPages}
               className="px-3 py-1 mx-1 bg-blue-500 text-white font-medium text-lg rounded-full hover:bg-blue-600 focus:outline-none focus:shadow-outline transition duration-300 ease-in-out disabled:bg-gray-400"
             >

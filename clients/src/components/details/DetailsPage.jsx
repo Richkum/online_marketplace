@@ -36,8 +36,6 @@ function DetailsPage() {
         `http://localhost:3000/reviews/review/${productId}`
       );
       setReviews(response.data);
-      console.log(response.data.image_urls);
-      
     } catch (error) {
       console.error("Error fetching reviews:", error);
     }
@@ -109,7 +107,6 @@ function DetailsPage() {
     );
   }
 
- 
   return (
     <>
       <Navbar />
