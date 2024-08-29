@@ -84,7 +84,10 @@ router.get("/user-product-reviews/:id", authMiddleware, async (req, res) => {
     );
     console.log(rows);
     res.send(rows);
-  } catch (error) {}
+  } catch (error) {
+    console.error("Error fetching user's product reviews:", error.message);
+    res.status(500).json({ message: "Internal server error" });
+  }
 });
 
 export default router;
