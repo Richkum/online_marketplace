@@ -38,7 +38,7 @@ router.post("/add-review", authMiddleware, async (req, res) => {
   }
 });
 
-router.get("/all-reviews", authMiddleware, async (req, res) => {
+router.get("/all-reviews", async (req, res) => {
   const client = await pool.connect();
   try {
     const result = await client.query("SELECT * FROM reviews");
@@ -51,7 +51,7 @@ router.get("/all-reviews", authMiddleware, async (req, res) => {
   }
 });
 
-router.get("/review/:product_id", authMiddleware, async (req, res) => {
+router.get("/review/:product_id", async (req, res) => {
   const client = await pool.connect();
   try {
     const product_id = req.params.product_id;

@@ -5,6 +5,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 function Auth({ setIsOpen }) {
+  const API_URL = "https://online-marketplace-server.onrender.com";
   const [isLogin, setIsLogin] = useState(true);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -16,9 +17,7 @@ function Auth({ setIsOpen }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const url = isLogin
-        ? "http://localhost:3000/auth/login"
-        : "http://localhost:3000/auth/signup";
+      const url = isLogin ? `${API_URL}/auth/login` : `${API_URL}/auth/signup`;
       const data = isLogin
         ? { email, password }
         : { username, email, password };

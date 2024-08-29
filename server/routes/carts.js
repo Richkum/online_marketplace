@@ -4,7 +4,7 @@ import authMiddleware from "../middleware/authIndex.js";
 
 const router = express.Router();
 
-router.post("/add-to-cart", authMiddleware, async (req, res) => {
+router.post("/add-to-cart", async (req, res) => {
   const client = await pool.connect();
   const { user_id, product_id, quantity } = req.body;
   console.log(
