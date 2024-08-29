@@ -3,7 +3,10 @@ import Navbar from "../navbar/navbar";
 import { AuthContext } from "../../contex/Authcontext";
 
 function ReviewsPage() {
+  const API_URL = "https://online-marketplace-server.onrender.com";
+
   const { user } = useContext(AuthContext);
+  console.log(user.id);
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -32,7 +35,7 @@ function ReviewsPage() {
     };
 
     fetchReviews();
-  }, [user.id, user.token]);
+  }, []);
 
   return (
     <>

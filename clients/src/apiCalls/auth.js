@@ -1,8 +1,9 @@
 import axios from "axios";
 
+const API_URL = `https://online-marketplace-server.onrender.com`;
 async function signup(username, email, password) {
   try {
-    const response = await axios.post("https://localhost:5432/signup", {
+    const response = await axios.post(`${API_URL}/auth/signup`, {
       username,
       email,
       password,
@@ -16,7 +17,7 @@ async function signup(username, email, password) {
 
 async function login(email, password) {
   try {
-    const response = await axios.post("https://localhost:5432/login", {
+    const response = await axios.post(`${API_URL}/auth/login`, {
       email,
       password,
     });

@@ -8,6 +8,8 @@ import axios from "axios";
 import { AuthContext } from "../../contex/Authcontext";
 
 function DetailsPage() {
+  const API_URL = "https://online-marketplace-server.onrender.com";
+
   const { user } = useContext(AuthContext);
   const quantitty = 1;
 
@@ -33,7 +35,7 @@ function DetailsPage() {
   const fetchReviews = async (productId) => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/reviews/review/${productId}`
+        `${API_URL}/reviews/review/${productId}`
       );
       setReviews(response.data);
     } catch (error) {
@@ -43,14 +45,11 @@ function DetailsPage() {
 
   const handleAddToCart = async () => {
     try {
-      const response = await axios.post(
-        "http://localhost:3000/carts/add-to-cart",
-        {
-          user_id: user.id,
-          product_id: product.id,
-          quantity: quantitty,
-        }
-      );
+      const response = await axios.post(`${API_URL}/carts/add-to-cart`, {
+        user_id: user.id,
+        product_id: product.id,
+        quantity: quantitty,
+      });
       console.log(response.data);
       alert(response.data.message);
     } catch (error) {
@@ -61,7 +60,7 @@ function DetailsPage() {
 
   const handleReviewSubmit = async () => {
     try {
-      await axios.post(`http://localhost:3000/reviews/add-review`, {
+      await axios.post(`${API_URL}/reviews/add-review`, {
         product_id: id,
         review: newReview,
         rating,

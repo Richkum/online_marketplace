@@ -7,6 +7,8 @@ import { AuthContext } from "../../contex/Authcontext";
 import axios from "axios";
 
 function Carts() {
+  const API_URL = "https://online-marketplace-server.onrender.com";
+
   const { user } = useContext(AuthContext);
   const [carts, setCarts] = useState([]);
   const navigate = useNavigate();
@@ -28,15 +30,12 @@ function Carts() {
 
   const handleRemoveFromCart = async (productId) => {
     try {
-      const response = await axios.delete(
-        "http://localhost:3000/carts/remove-from-cart",
-        {
-          data: {
-            user_id: user.id,
-            product_id: productId,
-          },
-        }
-      );
+      const response = await axios.delete(`${API_URL}/carts/remove-from-cart`, {
+        data: {
+          user_id: user.id,
+          product_id: productId,
+        },
+      });
       alert(response.data.message);
       setCarts((prevCarts) =>
         prevCarts.filter((cart) => cart.product_id !== productId)

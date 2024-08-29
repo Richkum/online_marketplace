@@ -1,10 +1,9 @@
 import axios from "axios";
 
+const API_URL = "https://online-marketplace-server.onrender.com";
 const fetchCategories = async () => {
   try {
-    const response = await axios.get(
-      "http://localhost:3000/category/all-category"
-    );
+    const response = await axios.get(`${API_URL}/category/all-category`);
     console.log(response.data);
     return response.data;
   } catch (error) {
@@ -16,14 +15,11 @@ const fetchCategories = async () => {
 const fetchProducts = async () => {
   try {
     const token = localStorage.getItem("token");
-    const response = await axios.get(
-      "http://localhost:3000/product/all-products",
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const response = await axios.get(`${API_URL}/product/all-products`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     console.log(response.data);
     return response.data;
   } catch (error) {
@@ -41,7 +37,7 @@ const fetchSearchProducts = async (keyword) => {
   try {
     const token = localStorage.getItem("token");
     const response = await axios.get(
-      `http://localhost:3000/product/search-products?keyword=${keyword}`,
+      `${API_URL}/product/search-products?keyword=${keyword}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -64,14 +60,11 @@ const fetchSearchProducts = async (keyword) => {
 const fetchReviews = async () => {
   try {
     const token = localStorage.getItem("token");
-    const response = await axios.get(
-      "http://localhost:3000/reviews/all-reviews",
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const response = await axios.get(`${API_URL}/reviews/all-reviews`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return response.data;
   } catch (error) {
     console.error("Error fetching reviews:", {
@@ -92,7 +85,7 @@ const fetchUserProducts = async (userId) => {
     // }
 
     const response = await axios.get(
-      `http://localhost:3000/product/user-products/${userId}`,
+      `${API_URL}/product/user-products/${userId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -114,14 +107,11 @@ const fetchUserProducts = async (userId) => {
 const usersAddedToCart = async (userId) => {
   try {
     const token = localStorage.getItem("token");
-    const response = await axios.get(
-      `http://localhost:3000/carts/user-cart/${userId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const response = await axios.get(`${API_URL}/carts/user-cart/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return response.data;
   } catch (error) {
     console.error("Error fetching user products:", {
