@@ -15,7 +15,7 @@ function ReviewsPage() {
     const fetchReviews = async () => {
       try {
         const response = await fetch(
-          `/api/reviews/user-product-reviews/${user.id}`,
+          `${API_URL}/reviews/user-product-reviews/${user.id}`,
           {
             headers: {
               Authorization: `Bearer ${user.token}`,

@@ -4,6 +4,7 @@ import { fetchCategories } from "../../apiCalls/fetchData";
 import { AuthContext } from "../../contex/Authcontext";
 
 function AddItemModal({ isOpen, onClose }) {
+  const API_URL = "https://online-marketplace-server.onrender.com";
   const { user } = useContext(AuthContext);
   useEffect(() => {
     if (user) {
@@ -63,13 +64,17 @@ function AddItemModal({ isOpen, onClose }) {
     try {
       await new Promise((resolve) => setTimeout(resolve, 60000));
 
-      const response = await axios.post("/api/product/add-product", data, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        timeout: 60000,
-      });
+      const response = await axios.post(
+        `${API_URL}/product/add-product`,
+        data,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          timeout: 60000,
+        }
+      );
       console.log("Product added successfully:", response.data);
       onClose();
     } catch (err) {
