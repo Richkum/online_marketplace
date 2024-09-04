@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Navbar from "../navbar/navbar";
 import Footer from "../footer/Footer";
 import AddItemModal from "../item/AddItem";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../../contex/Authcontext";
 
 function Dashboard() {
+  const { logout } = useContext(AuthContext);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => setIsModalOpen(true);
@@ -77,6 +80,30 @@ function Dashboard() {
             discounts and offers on your favorite products.
           </p>
         </div>
+      </div>
+      <div className="container mx-auto p-4 flex justify-center">
+        <Link to={"/"}>
+          <button
+            onClick={logout}
+            className="w-full max-w-sm bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full transition duration-300"
+          >
+            <svg
+              className="w-6 h-6 inline-block mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+              ></path>
+            </svg>
+            Logout
+          </button>
+        </Link>
       </div>
       <AddItemModal isOpen={isModalOpen} onClose={closeModal} />
       <Footer />

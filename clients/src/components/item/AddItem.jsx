@@ -4,7 +4,7 @@ import { fetchCategories } from "../../apiCalls/fetchData";
 import { AuthContext } from "../../contex/Authcontext";
 
 function AddItemModal({ isOpen, onClose }) {
-  const API_URL = "https://online-marketplace-server.onrender.com";
+  const API_URL = import.meta.env.VITE_API_BASE_URL;
   const { user } = useContext(AuthContext);
   useEffect(() => {
     if (user) {

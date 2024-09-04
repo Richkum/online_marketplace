@@ -5,7 +5,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 function Auth({ setIsOpen }) {
-  const API_URL = "https://online-marketplace-server.onrender.com";
+  const API_URL = import.meta.env.VITE_API_BASE_URL;
   const [isLogin, setIsLogin] = useState(true);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");

@@ -1,6 +1,8 @@
 import axios from "axios";
 
-const API_URL = `https://online-marketplace-server.onrender.com`;
+// Use the API base URL from the environment variable
+const API_URL = import.meta.env.VITE_API_BASE_URL;
+
 async function signup(username, email, password) {
   try {
     const response = await axios.post(`${API_URL}/auth/signup`, {
@@ -23,7 +25,7 @@ async function login(email, password) {
     });
     return response.data;
   } catch (error) {
-    console.error("login failed");
+    console.error("login failed", error);
     throw error;
   }
 }

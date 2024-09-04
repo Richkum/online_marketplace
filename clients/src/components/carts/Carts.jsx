@@ -7,7 +7,7 @@ import { AuthContext } from "../../contex/Authcontext";
 import axios from "axios";
 
 function Carts() {
-  const API_URL = "https://online-marketplace-server.onrender.com";
+  const API_URL = import.meta.env.VITE_API_BASE_URL;
 
   const { user } = useContext(AuthContext);
   const [carts, setCarts] = useState([]);
