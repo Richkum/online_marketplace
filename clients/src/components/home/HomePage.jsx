@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../navbar/navbar";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Footer from "../footer/Footer";
 import {
   fetchProducts,
@@ -14,20 +14,33 @@ function ProductsPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(true);
   const itemsPerPage = 12;
 
+  const location = useLocation();
+  const navigate = useNavigate();
+
   useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const querySearchTerm = queryParams.get("search") || "";
+    const queryCategory = queryParams.get("category") || "";
+
+    setSearchTerm(querySearchTerm);
+    setSelectedCategory(queryCategory);
+    setCurrentPage(Number(queryParams.get("page")) || 1);
+
     const getProducts = async () => {
       try {
         const products = await fetchProducts();
         setProducts(products);
+        setIsLoading(false);
       } catch (error) {
         console.error("Error fetching products:", error);
       }
     };
 
     getProducts();
-  }, []);
+  }, [location.search]);
 
   useEffect(() => {
     const getCategories = async () => {
@@ -42,6 +55,23 @@ function ProductsPage() {
     getCategories();
   }, []);
 
+  useEffect(() => {
+    const fetchProductsData = async () => {
+      try {
+        const filteredProducts = await fetchSearchProducts(
+          searchTerm,
+          selectedCategory
+        );
+        setProducts(filteredProducts);
+        setCurrentPage(1);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+
+    fetchProductsData();
+  }, [searchTerm, selectedCategory]);
+
   const totalPages = Math.ceil(products.length / itemsPerPage);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -49,17 +79,28 @@ function ProductsPage() {
 
   const handleClick = (pageNumber) => {
     setCurrentPage(pageNumber);
+    navigate(
+      `?search=${searchTerm}&category=${selectedCategory}&page=${pageNumber}`
+    );
   };
 
   const handlePrevClick = () => {
     if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
+      const newPage = currentPage - 1;
+      setCurrentPage(newPage);
+      navigate(
+        `?search=${searchTerm}&category=${selectedCategory}&page=${newPage}`
+      );
     }
   };
 
   const handleNextClick = () => {
     if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
+      const newPage = currentPage + 1;
+      setCurrentPage(newPage);
+      navigate(
+        `?search=${searchTerm}&category=${selectedCategory}&page=${newPage}`
+      );
     }
   };
 
@@ -69,33 +110,25 @@ function ProductsPage() {
 
   const handleSearchKeyDown = async (event) => {
     if (event.key === "Enter") {
-      try {
-        const searchResults = await fetchSearchProducts(
-          searchTerm,
-          selectedCategory
-        );
-        console.log("Search results:", searchResults);
-        setProducts(searchResults);
-        setCurrentPage(1);
-      } catch (error) {
-        console.error("Error fetching search results:", error);
-      }
+      navigate(`?search=${searchTerm}&category=${selectedCategory}&page=1`);
     }
   };
 
-  const handleCategoryChange = async (event) => {
+  const handleCategoryChange = (event) => {
     setSelectedCategory(event.target.value);
-    try {
-      const filteredProducts = await fetchSearchProducts(
-        searchTerm,
-        event.target.value
-      );
-      setProducts(filteredProducts);
-      setCurrentPage(1);
-    } catch (error) {
-      console.error("Error fetching category products:", error);
-    }
+    navigate(`?search=${searchTerm}&category=${event.target.value}&page=1`);
   };
+
+  if (isLoading) {
+    return (
+      <>
+        <Navbar />
+        <div className="min-h-screen flex items-center justify-center">
+          <h1 className="text-3xl font-bold">Loading... ⏳</h1>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>

@@ -7,6 +7,7 @@ import { AuthContext } from "../../contex/Authcontext";
 
 function Listing() {
   const [products, setProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const { user } = useContext(AuthContext);
 
   useEffect(() => {
@@ -16,6 +17,7 @@ function Listing() {
           const products = await fetchUserProducts(user.id);
           console.log(products);
           setProducts(products);
+          setIsLoading(false);
         } catch (error) {
           console.error("Error fetching user products:", error);
         }
@@ -24,6 +26,32 @@ function Listing() {
 
     getUserProducts();
   }, []);
+
+  if (isLoading) {
+    return (
+      <>
+        <Navbar />
+        <div className="min-h-screen flex items-center justify-center">
+          <h1 className="text-3xl font-bold">Loading... ⏳</h1>
+        </div>
+        <Footer />
+      </>
+    );
+  }
+
+  if (products.length === 0) {
+    return (
+      <>
+        <Navbar />
+        <div className="min-h-screen flex items-center justify-center">
+          <h1 className="text-3xl font-bold">
+            You don't have any listed products
+          </h1>
+        </div>
+        <Footer />
+      </>
+    );
+  }
 
   return (
     <div>

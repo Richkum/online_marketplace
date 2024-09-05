@@ -6,6 +6,7 @@ import productRoutes from "./routes/product.js";
 import categoryRoutes from "./routes/category.js";
 import reviesRoutes from "./routes/reviews.js";
 import cartsRoutes from "./routes/carts.js";
+import paymentRoutes from "./routes/payment.js";
 import fileUpload from "express-fileupload";
 
 dotenv.config();
@@ -38,6 +39,8 @@ app.use("/category", categoryRoutes);
 app.use("/reviews", reviesRoutes);
 
 app.use("/carts", cartsRoutes);
+
+app.use("/payment", paymentRoutes);
 
 app.listen(port, () => {
   console.log(`app listening at http://localhost:${port}`);

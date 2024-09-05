@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "https://online-marketplace-server.onrender.com";
+const API_URL = import.meta.env.VITE_API_BASE_URL;
 const fetchCategories = async () => {
   try {
     const response = await axios.get(`${API_URL}/category/all-category`);

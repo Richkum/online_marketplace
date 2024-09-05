@@ -10,7 +10,15 @@ function Carts() {
   const API_URL = import.meta.env.VITE_API_BASE_URL;
 
   const { user } = useContext(AuthContext);
+  console.log("User from AuthContext:", user);
+
+  if (!user || !user.id) {
+    console.error("User ID is not defined, unable to fetch cart.");
+  }
+
   const [carts, setCarts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [message, setMessage] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -18,31 +26,54 @@ function Carts() {
       if (user && user.id) {
         try {
           const carts = await usersAddedToCart(user.id);
-          console.log(carts);
+          console.log("Fetched carts:", carts);
           setCarts(carts);
         } catch (error) {
-          console.error("Error fetching carts:", error);
+          console.error("Error fetching carts:", error.response?.data || error);
+          setMessage({
+            type: "error",
+            message:
+              error.response?.data?.message || "Failed to fetch cart items",
+          });
+        } finally {
+          setIsLoading(false);
         }
       }
     };
     fetchCarts();
-  }, [user]);
+  }, [user?.id]);
 
   const handleRemoveFromCart = async (productId) => {
+    setMessage(null);
+
     try {
       const response = await axios.delete(`${API_URL}/carts/remove-from-cart`, {
         data: {
-          user_id: user.id,
+          user_id: parseInt(user.id, 10),
           product_id: productId,
         },
       });
-      alert(response.data.message);
       setCarts((prevCarts) =>
         prevCarts.filter((cart) => cart.product_id !== productId)
       );
+
+      setMessage({
+        type: "success",
+        message:
+          response.data.message || "Product removed from cart successfully",
+      });
+
+      console.log("Product removed:", response.data);
     } catch (error) {
-      console.error("Error removing product from cart:", error);
-      alert("There was an error removing the product from the cart.");
+      console.error(
+        "Error removing product from cart:",
+        error.response?.data || error
+      );
+      setMessage({
+        type: "error",
+        message:
+          error.response?.data?.message || "Failed to remove product from cart",
+      });
     }
   };
 
@@ -54,8 +85,21 @@ function Carts() {
   };
 
   const handleCheckout = () => {
-    navigate("/checkout");
+    const totalPrice = calculateTotalPrice();
+    navigate("/checkout", { state: { totalPrice } });
   };
+
+  if (isLoading) {
+    return (
+      <>
+        <Navbar />
+        <div className="min-h-screen flex items-center justify-center">
+          <h1 className="text-3xl font-bold">Loading... ⏳</h1>
+        </div>
+        <Footer />
+      </>
+    );
+  }
 
   if (carts.length === 0) {
     return (
@@ -63,7 +107,7 @@ function Carts() {
         <Navbar />
         <div className="container mx-auto px-4 py-8 text-center">
           <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center md:text-left">
-            You don't have any carts
+            Your cart is empty 😕
           </h1>
         </div>
         <Footer />
@@ -75,8 +119,21 @@ function Carts() {
     <>
       <Navbar />
       <div className="container mx-auto px-4 py-8 text-center">
+        {message && (
+          <div
+            className={`fixed left-0 top-1/4 p-4 rounded-md transition-all duration-1000 ${
+              message.type === "success" ? "bg-green-100" : "bg-red-100"
+            }`}
+            style={{ zIndex: 1000, animation: "slideInOut 3s forwards" }}
+          >
+            <h3 className="font-bold">
+              {message.type === "success" ? "Success!" : "Error:"}
+            </h3>
+            <p>{message.message}</p>
+          </div>
+        )}
         <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center md:text-left">
-          Here are your carts
+          Your 🛒
         </h1>
         <div className="mt-8 grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
           {carts.map((cart) => (
@@ -101,7 +158,10 @@ function Carts() {
                 </p>
                 <button
                   className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 focus:outline-none"
-                  onClick={() => handleRemoveFromCart(cart.product_id)}
+                  onClick={() => {
+                    handleRemoveFromCart(cart.product_id);
+                    window.location.reload();
+                  }}
                 >
                   Remove
                 </button>

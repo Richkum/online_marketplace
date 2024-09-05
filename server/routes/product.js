@@ -8,13 +8,25 @@ import getUserProducts from "./utils.js";
 const router = express.Router();
 
 router.post("/add-product", authMiddleware, async (req, res) => {
+  console.log("Received request to add product.");
   const client = await pool.connect();
 
   try {
     const { name, description, price, category } = req.body;
+    console.log(
+      "Received data:",
+      "name, ",
+      name,
+      "desc, ",
+      description,
+      "price, ",
+      price,
+      "category, ",
+      category
+    );
     const images = req.files.images;
-    const userId = req.user.id;
-    console.log(name, description, price, category, userId);
+    console.log("Images:", images);
+    const userId = req.userId;
 
     if (!images) {
       return res.status(400).json({ message: "No images provided" });

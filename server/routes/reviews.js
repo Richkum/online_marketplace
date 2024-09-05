@@ -70,9 +70,12 @@ router.get("/review/:product_id", async (req, res) => {
 });
 
 router.get("/user-product-reviews/:id", authMiddleware, async (req, res) => {
+  console.log("Fetching user's product reviews...");
   try {
-    const id = req.params.id;
+    const id = req.userId;
+    console.log("id:", id);
     const productIds = await getUserProducts(id);
+    console.log("productIds:", productIds);
 
     if (productIds.length === 0) {
       return res.json([]);

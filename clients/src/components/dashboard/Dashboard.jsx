@@ -11,7 +11,9 @@ function Dashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
+  const closeModal = () => {
+    setTimeout(() => setIsModalOpen(false), 3000);
+  };
 
   return (
     <>

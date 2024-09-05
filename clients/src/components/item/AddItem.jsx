@@ -2,15 +2,21 @@ import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { fetchCategories } from "../../apiCalls/fetchData";
 import { AuthContext } from "../../contex/Authcontext";
+import { useNavigate } from "react-router-dom";
 
 function AddItemModal({ isOpen, onClose }) {
   const API_URL = import.meta.env.VITE_API_BASE_URL;
+
   const { user } = useContext(AuthContext);
+
+  const navigate = useNavigate();
+
   useEffect(() => {
     if (user) {
       console.log(user.id);
     }
   }, [user]);
+  const [message, setMessage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     images: [],
@@ -54,6 +60,7 @@ function AddItemModal({ isOpen, onClose }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+    setMessage(null);
     const data = new FormData();
     formData.images.forEach((image) => data.append("images", image));
     data.append("price", formData.price);
@@ -76,17 +83,22 @@ function AddItemModal({ isOpen, onClose }) {
         }
       );
       console.log("Product added successfully:", response.data);
+      setMessage({ type: "success", message: response.data.message });
+      navigate("/listings");
       onClose();
     } catch (err) {
       if (err.response) {
         console.error("Error adding product:", err.response.data.message);
+        setMessage({ type: "error", message: err.response.data.message });
       } else if (err.request) {
         console.error(
           "Error adding product: No response received",
           err.request
         );
+        setMessage({ type: "error", message: "No response received" });
       } else {
         console.error("Error adding product:", err);
+        setMessage({ type: "error", message: "An error occurred" });
       }
     } finally {
       setIsLoading(false);
@@ -97,6 +109,19 @@ function AddItemModal({ isOpen, onClose }) {
 
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center px-4 py-8">
+      {message && (
+        <div
+          className={`fixed left-0 top-1/4 p-4 rounded-md transition-all duration-1000 ${
+            message.type === "success" ? "bg-green-100" : "bg-red-100"
+          }`}
+          style={{ zIndex: 1000, animation: "slideInOut 3s forwards" }}
+        >
+          <h3 className="font-bold">
+            {message.type === "success" ? "Success!" : "Error:"}
+          </h3>
+          <p>{message.message}</p>
+        </div>
+      )}
       <div className="bg-white rounded-lg shadow-lg p-8 overflow-auto max-h-full">
         <button
           onClick={onClose}

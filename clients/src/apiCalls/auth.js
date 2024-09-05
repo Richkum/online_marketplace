@@ -1,6 +1,5 @@
 import axios from "axios";
 
-// Use the API base URL from the environment variable
 const API_URL = import.meta.env.VITE_API_BASE_URL;
 
 async function signup(username, email, password) {

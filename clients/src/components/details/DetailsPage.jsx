@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import Navbar from "../navbar/navbar";
 import Footer from "../footer/Footer";
@@ -11,6 +12,7 @@ function DetailsPage() {
   const API_URL = import.meta.env.VITE_API_BASE_URL;
 
   const { user } = useContext(AuthContext);
+  console.log("user:", user);
   const quantitty = 1;
 
   const [products, setProducts] = useState([]);
@@ -18,9 +20,20 @@ function DetailsPage() {
   const [newReview, setNewReview] = useState("");
   const [rating, setRating] = useState(0);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [message, setMessage] = useState(null);
 
   useEffect(() => {
-    fetchProducts().then((data) => setProducts(data));
+    const getProducts = async () => {
+      try {
+        const products = await fetchProducts();
+        setProducts(products);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+    getProducts();
   }, []);
 
   const { id } = useParams();
@@ -44,21 +57,34 @@ function DetailsPage() {
   };
 
   const handleAddToCart = async () => {
+    setMessage(null);
+    console.log("Starting to add product to cart...");
+    console.log("User ID:", user.id);
+    console.log("Product ID:", product.id);
+    console.log("Quantity:", quantitty);
+
     try {
       const response = await axios.post(`${API_URL}/carts/add-to-cart`, {
-        user_id: user.id,
+        user_id: parseInt(user.id, 10),
         product_id: product.id,
         quantity: quantitty,
       });
-      console.log(response.data);
-      alert(response.data.message);
+
+      console.log("Response from server:", response.data);
+      setMessage({ type: "success", message: response.data.message });
     } catch (error) {
       console.error("Error adding product to cart:", error);
-      alert("There was an error adding the product to the cart.");
+      setMessage({
+        type: "error",
+        message: "There was an error adding the product to the cart.",
+      });
+    } finally {
+      console.log("Completed handleAddToCart function.");
     }
   };
 
   const handleReviewSubmit = async () => {
+    setMessage(null);
     try {
       await axios.post(`${API_URL}/reviews/add-review`, {
         product_id: id,
@@ -68,8 +94,11 @@ function DetailsPage() {
       setNewReview("");
       setRating(0);
       fetchReviews(id);
+
+      setMessage({ type: "success", message: "Review submitted successfully" });
     } catch (error) {
       console.error("Error submitting review:", error);
+      setMessage({ type: "error", message: "Failed to submit review" });
     }
   };
 
@@ -95,6 +124,22 @@ function DetailsPage() {
     (p) => p.id !== product.id && p.category_id === product.category_id
   );
 
+  setTimeout(() => {
+    setMessage(null);
+  }, 3000);
+
+  if (isLoading) {
+    return (
+      <>
+        <Navbar />
+        <div className="min-h-screen flex items-center justify-center">
+          <h1 className="text-3xl font-bold">Loading... ⏳</h1>
+        </div>
+        <Footer />
+      </>
+    );
+  }
+
   if (!product) {
     return (
       <>
@@ -110,6 +155,20 @@ function DetailsPage() {
     <>
       <Navbar />
       <div className="container mx-auto p-6">
+        {message && (
+          <div
+            className={`fixed left-0 top-1/4 p-4 rounded-md transition-all duration-1000 ${
+              message.type === "success" ? "bg-green-100" : "bg-red-100"
+            }`}
+            style={{ zIndex: 1000, animation: "slideInOut 3s forwards" }}
+          >
+            <h3 className="font-bold">
+              {message.type === "success" ? "Success!" : "Error:"}
+            </h3>
+            <p>{message.message}</p>
+          </div>
+        )}
+
         <div className="flex flex-col lg:flex-row items-start lg:items-center space-y-6 lg:space-y-0 lg:space-x-6">
           <div className="relative w-full lg:w-1/2">
             <img
@@ -158,13 +217,13 @@ function DetailsPage() {
             </button>
           </div>
         </div>
-        <div className="mt-4 flex space-x-2">
+        <div className="mt-4 flex flex-wrap items-center space-x-2 sm:space-x-4">
           {product.image_urls.map((image, index) => (
             <img
               key={index}
               src={image}
               alt={`${product.name} ${index + 1}`}
-              className={`w-16 h-16 object-cover rounded-lg cursor-pointer ${
+              className={`w-16 h-16 sm:w-24 sm:h-24 object-cover rounded-lg cursor-pointer ${
                 index === currentImageIndex ? "border-2 border-blue-500" : ""
               }`}
               onClick={() => setCurrentImageIndex(index)}
@@ -230,14 +289,13 @@ function DetailsPage() {
         </div>
         <div className="mt-12">
           <h1 className="text-2xl font-bold text-gray-800">Similar Products</h1>
-          <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 mt-6">
-            <Link to={`/products/${products.id}`}>
-              {" "}
-              {similarProducts.map((similarProduct) => (
-                <div
-                  key={similarProduct.id}
-                  className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out"
-                >
+          <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+            {similarProducts.map((similarProduct) => (
+              <Link
+                to={`/products/${similarProduct.id}`}
+                key={similarProduct.id}
+              >
+                <div className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out">
                   <img
                     src={similarProduct.image_urls[0]}
                     alt={similarProduct.name}
@@ -252,8 +310,8 @@ function DetailsPage() {
                     </p>
                   </div>
                 </div>
-              ))}
-            </Link>
+              </Link>
+            ))}
           </div>
         </div>
       </div>
