@@ -1,100 +1,120 @@
-import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
-import axios from "axios";
-import { loadStripe } from "@stripe/stripe-js";
+import React, { useState } from "react";
 import Navbar from "../navbar/navbar";
 import Footer from "../footer/Footer";
+import { useLocation } from "react-router-dom";
+import PopUp from "./PopUp";
+import { useNavigate } from "react-router-dom";
 
 function Checkout() {
-  const API_URL = import.meta.env.VITE_API_BASE_URL;
-  const SRIPE_KEY = import.meta.env.STRIPE_PUBLISHABLE_KEY;
   const location = useLocation();
-  const { totalPrice, productId } = location.state || {
-    totalPrice: 0,
-    productId: null,
-  };
-  const [isLoading, setIsLoading] = useState(false);
-  const [paymentStatus, setPaymentStatus] = useState(null);
-  const [clientSecret, setClientSecret] = useState("");
+  const navigate = useNavigate();
+  const { totalPrice } = location.state || { totalPrice: 0 };
+  const [email, setEmail] = useState("");
+  const [amount, setAmount] = useState(totalPrice);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [popUpMessage, setPopUpMessage] = useState("");
+  const [showPopUp, setShowPopUp] = useState(false);
 
-  const handlePayment = async () => {
-    try {
-      setIsLoading(true);
+  const handlePaystackPayment = (e) => {
+    e.preventDefault();
 
-      const response = await axios.post(
-        `${API_URL}/payment/create-payment-intent`,
-        {
-          product_id: productId,
-          amount: totalPrice,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`, // assuming you use token for auth
-          },
-        }
-      );
-
-      setClientSecret(response.data.clientSecret);
-      setPaymentStatus("Payment initiated! Please complete payment.");
-    } catch (error) {
-      setPaymentStatus("Error initiating payment: " + error.message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    await handlePayment();
-  };
-
-  // Load Stripe.js
-  const stripePromise = loadStripe(`${SRIPE_KEY}`);
-
-  useEffect(() => {
-    stripePromise.then((stripe) => {
-      const elements = stripe.elements();
-      const cardElement = elements.create("card");
-      cardElement.mount("#card-element");
+    const paystack = window.PaystackPop.setup({
+      key: "pk_test_f639b7389545a784519673053811d1ea0b7e7b2b",
+      email: email,
+      amount: amount * 100,
+      currency: "GHS",
+      ref: `${Math.floor(Math.random() * 1000000000 + 1)}`,
+      first_name: firstName,
+      last_name: lastName,
+      onClose: function () {
+        setPopUpMessage("Payment window closed.");
+        setShowPopUp(true);
+      },
+      callback: function (response) {
+        setPopUpMessage(`Payment complete! Reference: ${response.reference}`);
+        setShowPopUp(true);
+        navigate("/dashboard");
+      },
     });
-  }, []);
+
+    paystack.openIframe();
+  };
+
+  const closePopUp = () => {
+    setShowPopUp(false);
+  };
 
   return (
     <>
       <Navbar />
       <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-4">Checkout</h1>
-        <div className="bg-gray-100 p-6 rounded-lg shadow-lg">
-          <h2 className="text-2xl font-bold">
-            Total Amount: ${totalPrice.toFixed(2)}
-          </h2>
-
-          <form onSubmit={handleSubmit}>
-            <div className="mt-4">
+        <h1 className="text-4xl font-bold mb-8 text-center">Checkout</h1>
+        <div className="bg-white p-6 rounded-lg shadow-xl max-w-lg mx-auto">
+          <form onSubmit={handlePaystackPayment} id="paymentForm">
+            <div className="form-group mb-6">
               <label
-                htmlFor="card-element"
-                className="block text-sm font-medium text-gray-700"
+                className="block font-semibold mb-2"
+                htmlFor="email-address"
               >
-                Credit or debit card
+                Email Address
               </label>
-              <div className="mt-1">
-                {/* Stripe.js injects the CardElement here */}
-                <div id="card-element" className="StripeElement"></div>
-              </div>
+              <input
+                type="email"
+                id="email-address"
+                className="w-full p-2 border border-gray-300 rounded"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
             </div>
-
+            <div className="form-group mb-6">
+              <label className="block font-semibold mb-2" htmlFor="amount">
+                Amount
+              </label>
+              <input
+                type="tel"
+                id="amount"
+                className="w-full p-2 border border-gray-300 rounded"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                required
+              />
+            </div>
+            <div className="form-group mb-6">
+              <label className="block font-semibold mb-2" htmlFor="first-name">
+                First Name
+              </label>
+              <input
+                type="text"
+                id="first-name"
+                className="w-full p-2 border border-gray-300 rounded"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+              />
+            </div>
+            <div className="form-group mb-6">
+              <label className="block font-semibold mb-2" htmlFor="last-name">
+                Last Name
+              </label>
+              <input
+                type="text"
+                id="last-name"
+                className="w-full p-2 border border-gray-300 rounded"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+              />
+            </div>
             <button
               type="submit"
-              className="bg-green-500 text-white px-6 py-3 rounded-lg mt-4 hover:bg-green-600 focus:outline-none"
-              disabled={isLoading}
+              className="bg-green-500 text-white py-3 px-6 rounded-lg hover:bg-green-600 w-full"
             >
-              {isLoading ? "Processing..." : "Pay with Stripe"}
+              Pay with Paystack
             </button>
-
-            {paymentStatus && <p className="mt-4">{paymentStatus}</p>}
           </form>
         </div>
       </div>
+      {showPopUp && <PopUp message={popUpMessage} closePopUp={closePopUp} />}{" "}
       <Footer />
     </>
   );
