@@ -1,0 +1,169 @@
+.cart-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 40px;
+  gap: 30px;
+}
+
+.cart-container .item {
+  position: relative;
+  display: flex;
+  width: 500px;
+  height: 200px;
+  border: 1px solid black;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.cart-container .item .img-div {
+  width: 200px;
+  background-color: #888;
+}
+
+.cart-container .item .img-div img {
+  width: 200px;
+}
+
+.cart-container .item .details {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+.cart-container .item .details .name-price {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.cart-container .item .details .name-price p {
+  background-color: hsl(59, 55%, 19%);
+  color: #f7f1e5;
+  font-size: 20px;
+  font-weight: 600;
+  padding: 2px 5px;
+  border-radius: 5px;
+}
+
+/* x-icon */
+.x-icon {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  cursor: pointer;
+}
+
+.x-icon .bi-x-lg {
+  font-size: 20px;
+  color: red;
+  font-weight: bold;
+}
+
+.checkout-clear-btns {
+  display: flex;
+  gap: 10px;
+}
+
+/* Popup */
+.popup {
+  position: absolute;
+  top: -100%;
+  padding: 10px;
+  border-radius: 10px;
+  overflow: hidden;
+  font-size: 20px;
+  z-index: 999;
+
+  transition: 0.4s ease-in-out;
+}
+
+.popup.active {
+  top: 30px;
+}
+
+.popup.active::after {
+  content: "";
+  width: 100%;
+  height: 2px;
+  background-color: #f7f1e5;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+
+  animation: timeout 1.7s ease-in-out;
+}
+
+@keyframes timeout {
+  100% {
+    width: 0;
+  }
+}
+
+@media (max-width: 540px) {
+  .cart-container {
+    margin-top: 20px;
+    gap: 15px;
+  }
+
+  .cart-container .total h3 {
+    font-size: 20px;
+  }
+
+  .cart-container .item {
+    width: 280px;
+    height: 100px;
+  }
+
+  .cart-container .item .img-div {
+    width: 100px;
+  }
+
+  .cart-container .item .img-div img {
+    width: 100px;
+  }
+
+  .cart-container .item .details {
+    padding: 10px;
+  }
+
+  .cart-container .item .details .name-price {
+    gap: 10px;
+    font-size: 10px;
+  }
+
+  .cart-container .item .details .name-price h3 {
+    font-size: 18px;
+  }
+
+  .cart-container .item .details .name-price p {
+    font-size: 15px;
+    font-weight: 500;
+  }
+
+  .x-icon {
+    top: 5px;
+    right: 5px;
+  }
+
+  .x-icon .bi-x-lg {
+    font-size: 15px;
+  }
+
+  .quantity-buttons {
+    font-size: 18px;
+  }
+
+  .quantity-buttons button {
+    font-size: 23px;
+  }
+
+  .total-price h4 {
+    font-size: 16px;
+  }
+
+  .popup {
+    font-size: 15px;
+  }
+}
